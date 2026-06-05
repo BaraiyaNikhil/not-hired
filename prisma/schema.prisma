@@ -6,10 +6,80 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ApplicationStatus {
+  applied
+  screening
+  interview
+  offer
+  rejected
+  ghosted
+}
+
+enum ApplicationSource {
+  linkedin
+  referral
+  cold_email
+  job_portal
+  other
+}
+
 model User {
   id        String   @id // matches Supabase auth.users.id
-  username  String   @unique
   email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  applications Application[]
+  reminders    Reminder[]
+
+  @@map("users")
+}
+
+model Application {
+  id               String            @id @default(cuid())
+  userId           String            @map("user_id")
+  companyName      String            @map("company_name")
+  roleTitle        String            @map("role_title")
+  status           ApplicationStatus @default(applied)
+  source           ApplicationSource @default(other)
+  appliedDate      DateTime?         @map("applied_date")
+  lastActivityDate DateTime          @default(now()) @map("last_activity_date")
+  salaryRange      String?           @map("salary_range")
+  jobUrl           String?           @map("job_url")
+  notes            String?
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contacts  Contact[]
+  reminders Reminder[]
+
+  @@map("applications")
+}
+
+model Contact {
+  id            String  @id @default(cuid())
+  applicationId String  @map("application_id")
+  name          String
+  role          String?
+  email         String?
+  notes         String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("contacts")
+}
+
+model Reminder {
+  id            String   @id @default(cuid())
+  applicationId String   @map("application_id")
+  userId        String   @map("user_id")
+  dueDate       DateTime @map("due_date")
+  message       String
+  isDone        Boolean  @default(false) @map("is_done")
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reminders")
 }

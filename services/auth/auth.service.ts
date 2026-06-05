@@ -12,14 +12,8 @@ export async function signupService(data: SignupFormValues) {
   const origin =
     headersList.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  // Check if username is already taken
-  const existingUser = await prisma.user.findUnique({
-    where: { username: data.username },
-  });
-
-  if (existingUser) {
-    return { error: "Username is already taken." };
-  }
+  // We can't really check if name is unique unless name is @unique in prisma
+  // Let's remove the username check, or just check email if needed, but Supabase handles email.
 
   const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
@@ -40,7 +34,7 @@ export async function signupService(data: SignupFormValues) {
         data: {
           id: authData.user.id,
           email: data.email,
-          username: data.username,
+          name: data.name,
         },
       });
     } catch (e) {

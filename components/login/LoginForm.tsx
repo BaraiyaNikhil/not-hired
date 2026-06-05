@@ -27,7 +27,7 @@ export function LoginForm({
   const { executeAsync, isExecuting } = useAction(loginAction, {
     onSuccess: () => {
       toast.success("Successfully signed in!");
-      router.push("/dashboard");
+      setTimeout(() => router.push("/dashboard"), 1000);
     },
     onError: ({ error }) => {
       toast.error(error.serverError || "Failed to login");

@@ -24,6 +24,7 @@ export const loginAction = actionClient.inputSchema(loginSchema).action(async ({
   if (result.error) {
     throw new Error(result.error);
   }
+  return { success: result.success };
 });
 
 export const loginWithGoogleAction = actionClient.action(async () => {

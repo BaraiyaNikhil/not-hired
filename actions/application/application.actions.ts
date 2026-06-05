@@ -1,0 +1,43 @@
+"use server";
+
+import { authActionClient } from "@/lib/safe-action";
+import {
+  createApplicationSchema,
+  updateApplicationSchema,
+  changeStatusSchema,
+} from "@/types/application";
+import * as applicationService from "@/services/application/application.service";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
+export const createApplicationAction = authActionClient
+  .inputSchema(createApplicationSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const result = await applicationService.createApplication(ctx.user.id, parsedInput);
+    revalidatePath("/dashboard");
+    return result;
+  });
+
+export const updateApplicationAction = authActionClient
+  .inputSchema(updateApplicationSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const result = await applicationService.updateApplication(ctx.user.id, parsedInput);
+    revalidatePath("/dashboard");
+    return result;
+  });
+
+export const changeApplicationStatusAction = authActionClient
+  .inputSchema(changeStatusSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const result = await applicationService.updateApplicationStatus(ctx.user.id, parsedInput);
+    revalidatePath("/dashboard");
+    return result;
+  });
+
+export const deleteApplicationAction = authActionClient
+  .inputSchema(z.object({ id: z.string() }))
+  .action(async ({ parsedInput, ctx }) => {
+    const result = await applicationService.deleteApplication(ctx.user.id, parsedInput.id);
+    revalidatePath("/dashboard");
+    return result;
+  });

@@ -52,7 +52,7 @@ export function SignupForm({
     resolver: zodResolver(signupSchema),
     mode: "onTouched",
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -101,20 +101,18 @@ export function SignupForm({
           <div className="group">
             <label
               className="block font-sketch text-xl chalk-text mb-2 transition-colors group-focus-within:text-white"
-              htmlFor="signup-username"
+              htmlFor="signup-name"
             >
-              Username
+              Name
             </label>
             <input
-              {...register("username")}
+              {...register("name")}
               className="block w-full chalk-input font-sketch text-xl pb-2 transition-colors"
-              id="signup-username"
-              placeholder="Your username"
+              id="signup-name"
+              placeholder="Your name"
               type="text"
             />
-            {errors.username && (
-              <p className="font-sketch text-red-400 mt-1">{errors.username.message}</p>
-            )}
+            {errors.name && <p className="font-sketch text-red-400 mt-1">{errors.name.message}</p>}
           </div>
           <div className="group">
             <label
