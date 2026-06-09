@@ -63,6 +63,7 @@ model Contact {
   name          String
   role          String?
   email         String?
+  mobile        String?
   notes         String?
 
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)

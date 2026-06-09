@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@/lib/db";
 import { CreateContactInput, UpdateContactInput } from "@/types/contact";
 
@@ -11,6 +13,7 @@ export async function createContact(userId: string, data: CreateContactInput) {
       name: data.name,
       role: data.role,
       email: data.email,
+      mobile: data.mobile,
       notes: data.notes,
     },
   });
@@ -29,6 +32,7 @@ export async function updateContact(userId: string, data: UpdateContactInput) {
       name: data.name,
       role: data.role,
       email: data.email,
+      mobile: data.mobile,
       notes: data.notes,
     },
   });

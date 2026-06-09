@@ -15,6 +15,7 @@ export const createApplicationAction = authActionClient
   .action(async ({ parsedInput, ctx }) => {
     const result = await applicationService.createApplication(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
+    revalidatePath("/applications");
     return result;
   });
 
@@ -23,6 +24,7 @@ export const updateApplicationAction = authActionClient
   .action(async ({ parsedInput, ctx }) => {
     const result = await applicationService.updateApplication(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
+    revalidatePath("/applications");
     return result;
   });
 
@@ -31,6 +33,7 @@ export const changeApplicationStatusAction = authActionClient
   .action(async ({ parsedInput, ctx }) => {
     const result = await applicationService.updateApplicationStatus(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
+    revalidatePath("/applications");
     return result;
   });
 
@@ -39,5 +42,6 @@ export const deleteApplicationAction = authActionClient
   .action(async ({ parsedInput, ctx }) => {
     const result = await applicationService.deleteApplication(ctx.user.id, parsedInput.id);
     revalidatePath("/dashboard");
+    revalidatePath("/applications");
     return result;
   });

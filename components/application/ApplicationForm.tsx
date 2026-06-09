@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import {
@@ -9,16 +9,6 @@ import {
 } from "@/actions/application/application.actions";
 import { createApplicationSchema } from "@/types/application";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -35,6 +25,9 @@ import { motion } from "motion/react";
 interface ApplicationFormProps {
   trigger?: React.ReactNode;
 }
+
+import { ApplicationFormBasicFields } from "./ApplicationFormBasicFields";
+import { ApplicationFormContacts } from "./ApplicationFormContacts";
 
 export function ApplicationForm({ trigger }: ApplicationFormProps) {
   const { isApplicationFormOpen, setApplicationFormOpen, editingApp, setEditingApp } =
@@ -80,15 +73,13 @@ export function ApplicationForm({ trigger }: ApplicationFormProps) {
     defaultValues: {
       companyName: "",
       roleTitle: "",
-      status: "applied",
-      source: "other",
+      status: "applied" as const,
+      source: "other" as const,
       appliedDate: "",
       salaryRange: "",
       jobUrl: "",
       notes: "",
-      contactName: "",
-      contactRole: "",
-      contactEmail: "",
+      contacts: [],
     },
   });
 
@@ -105,6 +96,23 @@ export function ApplicationForm({ trigger }: ApplicationFormProps) {
         salaryRange: editingApp.salaryRange || "",
         jobUrl: editingApp.jobUrl || "",
         notes: editingApp.notes || "",
+        contacts: editingApp.contacts
+          ? editingApp.contacts.map(
+              (c: {
+                name: string;
+                role?: string | null;
+                email?: string | null;
+                mobile?: string | null;
+                notes?: string | null;
+              }) => ({
+                name: c.name,
+                role: c.role || "",
+                email: c.email || "",
+                mobile: c.mobile || "",
+                notes: c.notes || "",
+              })
+            )
+          : [],
       });
     } else {
       form.reset({
@@ -116,9 +124,7 @@ export function ApplicationForm({ trigger }: ApplicationFormProps) {
         salaryRange: "",
         jobUrl: "",
         notes: "",
-        contactName: "",
-        contactRole: "",
-        contactEmail: "",
+        contacts: [],
       });
     }
   }, [editingApp, form]);
@@ -135,155 +141,67 @@ export function ApplicationForm({ trigger }: ApplicationFormProps) {
 
   return (
     <Dialog open={isApplicationFormOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild onClick={() => setApplicationFormOpen(true)}>
-        {trigger || (
-          <Button className="bg-white text-black hover:bg-gray-200 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)] transition-all active:translate-y-1 active:shadow-none">
-            Create Application
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-zinc-950 border-white/20 text-white p-0 overflow-hidden shadow-2xl">
+      {trigger && (
+        <DialogTrigger asChild onClick={() => setApplicationFormOpen(true)}>
+          {trigger}
+        </DialogTrigger>
+      )}
+      <DialogContent
+        className="max-w-[calc(100%-2rem)] sm:max-w-2xl max-h-[90vh] overflow-y-scroll scrollbar-none p-0"
+        style={{
+          background: "#2a3439",
+          border: "3px dashed rgba(255,255,255,0.45)",
+          borderRadius: "4px 12px 5px 10px",
+          boxShadow: "8px 8px 0 rgba(0,0,0,0.4)",
+        }}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="p-6"
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.2 }}
+          className="p-4"
         >
-          <DialogHeader>
-            <DialogTitle>{isEditing ? "Edit Application" : "New Application"}</DialogTitle>
+          <DialogHeader className="mb-5">
+            <DialogTitle
+              className="font-sketch chalk-text text-2xl md:text-3xl"
+              style={{ borderBottom: "2px dashed rgba(255,255,255,0.2)", paddingBottom: 10 }}
+            >
+              {isEditing ? "✏️ Edit Application" : "📝 New Application"}
+            </DialogTitle>
             <DialogDescription className="sr-only">
               Fill out the form below to {isEditing ? "edit the" : "create a new"} application.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Company Name *</Label>
-                <Input {...form.register("companyName")} />
-                {form.formState.errors.companyName && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.companyName.message as string}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label>Role Title *</Label>
-                <Input {...form.register("roleTitle")} />
-                {form.formState.errors.roleTitle && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.roleTitle.message as string}
-                  </p>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <Label>Status</Label>
-                <Select
-                  defaultValue={form.getValues("status")}
-                  onValueChange={(val) =>
-                    form.setValue(
-                      "status",
-                      val as
-                        | "applied"
-                        | "screening"
-                        | "interview"
-                        | "offer"
-                        | "rejected"
-                        | "ghosted"
-                    )
-                  }
+          <FormProvider {...form}>
+            <form onSubmit={onSubmit} className="space-y-5">
+              <ApplicationFormBasicFields />
+              <ApplicationFormContacts />
+
+              <div className="flex justify-end gap-3 pt-2">
+                <Button
+                  type="button"
+                  onClick={() => handleOpenChange(false)}
+                  className="chalk-button chalk-text font-sketch text-base"
+                  style={{ background: "transparent" }}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="applied">Applied</SelectItem>
-                    <SelectItem value="screening">Screening</SelectItem>
-                    <SelectItem value="interview">Interview</SelectItem>
-                    <SelectItem value="offer">Offer</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                    <SelectItem value="ghosted">Ghosted</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Source</Label>
-                <Select
-                  defaultValue={form.getValues("source")}
-                  onValueChange={(val) =>
-                    form.setValue(
-                      "source",
-                      val as "linkedin" | "referral" | "cold_email" | "job_portal" | "other"
-                    )
-                  }
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="chalk-button chalk-text font-sketch text-base"
+                  style={{
+                    background: "rgba(255,255,255,0.1)",
+                    border: "2px dashed rgba(255,255,255,0.6)",
+                  }}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select source" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="linkedin">LinkedIn</SelectItem>
-                    <SelectItem value="referral">Referral</SelectItem>
-                    <SelectItem value="cold_email">Cold Email</SelectItem>
-                    <SelectItem value="job_portal">Job Portal</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                  {isSubmitting ? "Saving..." : isEditing ? "Update" : "Create Application"}
+                </Button>
               </div>
-
-              <div className="space-y-2">
-                <Label>Applied Date</Label>
-                <Input type="date" {...form.register("appliedDate")} />
-              </div>
-              <div className="space-y-2">
-                <Label>Salary Range</Label>
-                <Input placeholder="e.g. $100k - $120k" {...form.register("salaryRange")} />
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label>Job URL</Label>
-                <Input type="url" placeholder="https://..." {...form.register("jobUrl")} />
-                {form.formState.errors.jobUrl && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.jobUrl.message as string}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label>Notes</Label>
-                <Textarea {...form.register("notes")} />
-              </div>
-            </div>
-
-            {!isEditing && (
-              <div className="pt-4 border-t border-white/20 mt-4">
-                <h3 className="font-medium mb-4">Initial Contact (Optional)</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Contact Name</Label>
-                    <Input {...form.register("contactName")} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Contact Role</Label>
-                    <Input {...form.register("contactRole")} />
-                  </div>
-                  <div className="space-y-2 col-span-2">
-                    <Label>Contact Email</Label>
-                    <Input type="email" {...form.register("contactEmail")} />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save Application"}
-              </Button>
-            </div>
-          </form>
+            </form>
+          </FormProvider>
         </motion.div>
       </DialogContent>
     </Dialog>

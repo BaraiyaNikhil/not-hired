@@ -61,7 +61,11 @@ function DialogContent({
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close data-slot="dialog-close" asChild>
-            <Button variant="ghost" className="absolute top-5 right-5 bg-secondary" size="icon-sm">
+            <Button
+              variant="ghost"
+              className="absolute top-4 right-5 bg-secondary rounded"
+              size="icon-sm"
+            >
               <XIcon />
               <span className="sr-only">Close</span>
             </Button>
@@ -87,11 +91,7 @@ function DialogFooter({
   showCloseButton?: boolean;
 }) {
   return (
-    <div
-      data-slot="dialog-footer"
-      className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
-      {...props}
-    >
+    <div data-slot="dialog-footer" className={cn(className)} {...props}>
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>

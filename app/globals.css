@@ -155,7 +155,30 @@
     transition: opacity 0.3s ease-in-out;
   }
 
-  .is-wiping .board-wipe-effect {
-    opacity: 1;
+  .chalk-action-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      color 0.15s,
+      background 0.15s;
+  }
+
+  .chalk-action-btn:hover {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .chalk-select-content {
+    background: #2a3439 !important;
+    border: 2px dashed rgba(255, 255, 255, 0.4) !important;
+    border-radius: 4px !important;
+    color: white !important;
   }
 }

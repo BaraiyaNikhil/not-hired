@@ -5,6 +5,7 @@ export const createContactSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   role: z.string().trim().optional(),
   email: z.string().email("Invalid email").optional().or(z.literal("")),
+  mobile: z.string().trim().optional(),
   notes: z.string().optional(),
 });
 

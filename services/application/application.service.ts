@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@/lib/db";
 import {
   CreateApplicationInput,
@@ -26,15 +28,18 @@ export async function createApplication(userId: string, data: CreateApplicationI
       salaryRange: data.salaryRange,
       jobUrl: data.jobUrl,
       notes: data.notes,
-      contacts: data.contactName
-        ? {
-            create: {
-              name: data.contactName,
-              role: data.contactRole,
-              email: data.contactEmail,
-            },
-          }
-        : undefined,
+      contacts:
+        data.contacts && data.contacts.length > 0
+          ? {
+              create: data.contacts.map((c) => ({
+                name: c.name,
+                role: c.role,
+                email: c.email,
+                mobile: c.mobile,
+                notes: c.notes,
+              })),
+            }
+          : undefined,
     },
     include: { contacts: true },
   });
@@ -55,6 +60,17 @@ export async function updateApplication(userId: string, data: UpdateApplicationI
       salaryRange: data.salaryRange,
       jobUrl: data.jobUrl,
       notes: data.notes,
+      contacts: {
+        deleteMany: {},
+        create:
+          data.contacts?.map((c) => ({
+            name: c.name,
+            role: c.role,
+            email: c.email,
+            mobile: c.mobile,
+            notes: c.notes,
+          })) || [],
+      },
     },
     include: { contacts: true },
   });

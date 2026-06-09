@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Cabin_Sketch } from "next/font/google";
+import { Cabin_Sketch, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const cabinSketch = Cabin_Sketch({
   weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-sketch",
+});
+
+const patrickHand = Patrick_Hand({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +32,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-full flex flex-col font-sans m-0 p-0 box-border",
-          inter.variable,
+          patrickHand.variable,
           cabinSketch.variable
         )}
       >

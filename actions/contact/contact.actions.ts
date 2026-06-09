@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const createContactAction = authActionClient
-  .schema(createContactSchema)
+  .inputSchema(createContactSchema)
   .action(async ({ parsedInput, ctx }) => {
     const result = await contactService.createContact(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
@@ -15,7 +15,7 @@ export const createContactAction = authActionClient
   });
 
 export const updateContactAction = authActionClient
-  .schema(updateContactSchema)
+  .inputSchema(updateContactSchema)
   .action(async ({ parsedInput, ctx }) => {
     const result = await contactService.updateContact(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
@@ -23,7 +23,7 @@ export const updateContactAction = authActionClient
   });
 
 export const deleteContactAction = authActionClient
-  .schema(z.object({ id: z.string() }))
+  .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput, ctx }) => {
     const result = await contactService.deleteContact(ctx.user.id, parsedInput.id);
     revalidatePath("/dashboard");

@@ -12,10 +12,20 @@ export const createApplicationSchema = z.object({
   jobUrl: z.string().trim().url("Must be a valid URL").optional().or(z.literal("")),
   notes: z.string().optional(),
 
-  // Optional initial contact
-  contactName: z.string().optional(),
-  contactRole: z.string().optional(),
-  contactEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  // Optional list of contacts (max 5)
+  contacts: z
+    .array(
+      z.object({
+        name: z.string().trim().min(1, "Name is required"),
+        role: z.string().optional(),
+        email: z.string().email("Invalid email").optional().or(z.literal("")),
+        mobile: z.string().optional(),
+        notes: z.string().optional(),
+      })
+    )
+    .max(5, "Maximum 5 contacts allowed")
+    .optional()
+    .default([]),
 });
 
 export const updateApplicationSchema = createApplicationSchema.extend({
