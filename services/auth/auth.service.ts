@@ -82,6 +82,19 @@ export async function loginWithGoogleService() {
   return { url: data.url };
 }
 
+export async function getUserProfileService(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, email: true },
+    });
+    return { name: user?.name || user?.email?.split("@")[0] || "there" };
+  } catch (e) {
+    console.error("Failed to fetch user profile:", e);
+    return { name: "there" };
+  }
+}
+
 export async function logoutService() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();

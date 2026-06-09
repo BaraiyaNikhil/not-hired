@@ -7,6 +7,7 @@ import {
   loginService,
   loginWithGoogleService,
   logoutService,
+  getUserProfileService,
 } from "@/services/auth/auth.service";
 
 export const signupAction = actionClient
@@ -40,4 +41,9 @@ export const logoutAction = authActionClient.action(async () => {
   if (result.error) {
     throw new Error(result.error);
   }
+});
+
+export const getUserProfileAction = authActionClient.action(async ({ ctx: { user } }) => {
+  const result = await getUserProfileService(user.id);
+  return { name: result.name };
 });
