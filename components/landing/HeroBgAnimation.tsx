@@ -54,10 +54,10 @@ export function HeroBgAnimation() {
       {HERO_STAGES.map((s, i) => (
         <motion.div
           key={s.label}
-          className="absolute bottom-[8%] font-sketch text-[9px] tracking-[0.14em] uppercase"
+          className="hidden md:block md:absolute bottom-[2%] font-sketch text-[9px] tracking-[0.14em] uppercase"
           style={{ left: s.x, color: s.color }}
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: [0, 0.18, 0.18, 0] }}
+          animate={{ opacity: [0, 0.4, 0.4, 0] }}
           transition={{
             duration: 4,
             delay: i * 0.6,
@@ -75,11 +75,11 @@ export function HeroBgAnimation() {
       {[0, 1, 2, 3, 4].map((i) => (
         <motion.div
           key={`arrow-${i}`}
-          className="absolute text-[13px] select-none"
+          className="hidden md:block md:absolute text-[13px] select-none"
           style={{
-            bottom: "8.8%",
+            bottom: "3%",
             left: `${15 + i * 16.5}%`,
-            color: "rgba(255,255,255,0.12)",
+            color: "rgba(255,255,255,0.5)",
           }}
           initial={{ opacity: 0, x: -6 }}
           animate={{ opacity: [0, 0.6, 0], x: [-6, 0, 6] }}

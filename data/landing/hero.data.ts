@@ -46,7 +46,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     company: "GitHub",
     stage: "Ghosted",
     top: "46%",
-    left: "87%",
+    left: "80%",
     delay: 4,
     color: "rgba(156,163,175,0.12)",
   },

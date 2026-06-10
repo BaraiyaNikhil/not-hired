@@ -111,7 +111,7 @@ export function HeroSection() {
 
       {/* Kanban board mockup */}
       <motion.div
-        className="relative mt-[60px] w-full max-w-[1100px] board-bg p-4 md:p-5 z-10"
+        className="relative mt-[60px] w-full max-w-[1100px] board-bg p-4 md:p-5 z-10 scrollbar-none"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}

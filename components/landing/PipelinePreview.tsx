@@ -11,24 +11,21 @@ export function PipelinePreview() {
       >
         Pipeline view
       </div>
-      <div
-        className="flex gap-2 overflow-x-auto pb-1"
-        style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.12) transparent" }}
-      >
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         {PIPELINE_COLUMNS.map((col) => (
           <div key={col.label} className="shrink-0 w-[120px]">
             <div className="flex items-center gap-1 mb-[7px]">
-              <span className="text-[10px]">{col.emoji}</span>
-              <span className={`font-sketch text-[10px] ${col.textColor}`}>{col.label}</span>
+              <span className="text-[18px] pb-2">{col.emoji}</span>
+              <span className={`font-sketch text-[18px] pb-2 ${col.textColor}`}>{col.label}</span>
               <span
-                className="text-[8px] text-white/30 ml-auto"
+                className="text-[12px] pb-2 text-white/30 ml-auto"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 {col.cards.length}
               </span>
             </div>
             <div
-              className="min-h-[60px] rounded-sm p-1"
+              className="min-h-[150px] rounded-sm p-1"
               style={{
                 background: col.bg,
                 border: `1px dashed ${col.border}`,
@@ -38,7 +35,7 @@ export function PipelinePreview() {
               {col.cards.map((t) => (
                 <div
                   key={t}
-                  className="rounded p-[6px_8px] text-[10px] text-white/85 mb-[4px]"
+                  className="rounded p-[6px_8px] text-[12px] text-white/85 mb-[6px]"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     border: `1px dashed ${col.border}`,

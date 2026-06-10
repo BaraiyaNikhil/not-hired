@@ -58,7 +58,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-green-400",
     bg: "rgba(74,222,128,0.25)",
     border: "rgba(74,222,128,0.35)",
-    cards: [],
+    cards: ["Meta · SWE"],
   },
   {
     label: "Rejected",
@@ -66,7 +66,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-red-400",
     bg: "rgba(248,113,113,0.25)",
     border: "rgba(248,113,113,0.25)",
-    cards: ["Loom · SWE"],
+    cards: ["Loom · SWE", "Linear · SWE"],
   },
   {
     label: "Ghosted",
