@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { LayoutGrid, Home, BookOpen, Bell, Lightbulb, LogOut, User } from "lucide-react";
+import { LayoutGrid, BookOpen, Bell, Lightbulb, LogOut, User, LayoutDashboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { logoutAction, getUserProfileAction } from "@/actions/auth";
 
 const navItems = [
-  { href: "/dashboard", label: "Home", icon: Home },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/applications", label: "Board", icon: LayoutGrid },
   { href: "/reminders", label: "Reminders", icon: Bell },
   { href: "/insights", label: "Insights", icon: Lightbulb },

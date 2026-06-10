@@ -7,8 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), sans-serif;
+  --font-sans: var(--font-body), sans-serif;
   --font-sketch: var(--font-sketch), cursive;
+  --font-body: var(--font-body), sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-heading);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -88,6 +89,28 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body), sans-serif;
+  }
+}
+
+/* Landing keyframes — used via Tailwind arbitrary animation values */
+@keyframes lp-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes dust-pulse {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.38;
+    transform: scale(1.4);
   }
 }
 
@@ -180,5 +203,10 @@
     border: 2px dashed rgba(255, 255, 255, 0.4) !important;
     border-radius: 4px !important;
     color: white !important;
+  }
+
+  /* Sniglet body text utility */
+  .font-sniglet {
+    font-family: var(--font-body), sans-serif;
   }
 }

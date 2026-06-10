@@ -37,3 +37,5 @@
 10. **Services:** create services to use in action and it must be async functions and create all services in "services" folder with there own folder name.
 11. **Hooks:** create custom hooks in "hooks" folder with there own folder name.
 12. **Types:** create types for each action and its return type.
+13. **Component Granularity:** keep components small and focused — one responsibility per component. Aggressively extract sub-components (e.g. a card, a row, a badge) into their own files inside the same feature folder. A component file should rarely exceed ~150 lines. Never define helper components in the same file as a page-level component; always import them.
+14. **Mock / Fake Data:** never define static mock or fake data arrays inline inside a component file. All fake data (demo cards, placeholder content, sample stats, etc.) must live in a dedicated `data/` folder, organised by feature (e.g. `data/landing/hero.data.ts`, `data/landing/board.data.ts`). Export the data as typed constants and import them into the component that needs them.
