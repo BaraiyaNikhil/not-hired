@@ -16,6 +16,15 @@ export async function getApplications(userId: string) {
   });
 }
 
+export async function getApplicationById(userId: string, id: string) {
+  const app = await prisma.application.findUnique({
+    where: { id },
+    include: { contacts: true, reminders: true },
+  });
+  if (!app || app.userId !== userId) return null;
+  return app;
+}
+
 export async function createApplication(userId: string, data: CreateApplicationInput) {
   return prisma.application.create({
     data: {

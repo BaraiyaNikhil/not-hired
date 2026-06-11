@@ -12,12 +12,13 @@ import { ContactList } from "./ContactList";
 import { motion } from "motion/react";
 
 export function ContactsDialog() {
-  const { contactsApp, setContactsApp, applications } = useApplicationStore();
-
-  // Always pull the freshest version from the store
-  const currentApp = contactsApp
-    ? applications.find((a) => a.id === contactsApp.id) || contactsApp
-    : null;
+  const contactsApp = useApplicationStore((state) => state.contactsApp);
+  const setContactsApp = useApplicationStore((state) => state.setContactsApp);
+  const currentApp = useApplicationStore((state) =>
+    state.contactsApp
+      ? state.applications.find((a) => a.id === state.contactsApp?.id) || state.contactsApp
+      : null
+  );
 
   return (
     <Dialog open={!!contactsApp} onOpenChange={(open) => !open && setContactsApp(null)}>

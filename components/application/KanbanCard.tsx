@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { Edit, Trash2, Users, GripVertical, ExternalLink, MoreVertical } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { deleteApplicationAction } from "@/actions/application/application.actions";
@@ -9,6 +8,14 @@ import { toast } from "sonner";
 import { useApplicationStore } from "@/store";
 import { AppWithContacts } from "@/types/kanban";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { useRouter } from "next/navigation";
+import { formatRelativeDate } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface KanbanCardProps {
   app: AppWithContacts;
@@ -25,26 +32,8 @@ const SOURCE_LABELS: Record<string, string> = {
 };
 
 export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
-  const [showActions, setShowActions] = useState(false);
   const { setEditingApp, setContactsApp, deleteApplication } = useApplicationStore();
-  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-        setShowActions(false);
-      }
-    };
-    if (showActions) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [showActions]);
+  const router = useRouter();
 
   const { ref, isDragging } = useSortable({
     id: app.id,
@@ -64,36 +53,25 @@ export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
     },
   });
 
-  const handleMouseEnter = () => {
-    hoverTimeout.current = setTimeout(() => setShowActions(true), 100);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
-    setShowActions(false);
-  };
-
   return (
-    <div
-      ref={ref}
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ opacity: isDragging ? 0.4 : 1 }}
-    >
+    <div ref={ref} className="relative" style={{ opacity: isDragging ? 0.4 : 1 }}>
       <motion.div
-        ref={cardRef}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2 }}
         className="kanban-card group relative rounded-sm"
+        onClick={(e) => {
+          // If we clicked a button or link, don't navigate
+          if ((e.target as HTMLElement).closest("button, a")) return;
+          router.push(`/applications/${app.id}`);
+        }}
         style={{
           background: "rgba(255,255,255,0.04)",
           border: "2px dashed rgba(255,255,255,0.35)",
           borderRadius: "2px 6px 3px 5px",
           padding: "12px 14px",
-          cursor: isDragging ? "grabbing" : "grab",
+          cursor: isDragging ? "grabbing" : "pointer",
           boxShadow: isDragging ? "4px 4px 0 rgba(255,255,255,0.2)" : "2px 2px 0 rgba(0,0,0,0.3)",
           transition: "box-shadow 0.15s ease, transform 0.15s ease",
         }}
@@ -138,17 +116,55 @@ export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
                   <ExternalLink size={12} />
                 </a>
               )}
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowActions(!showActions);
-                }}
-                className="md:hidden opacity-40 hover:opacity-80 transition-opacity p-1"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
-                <MoreVertical size={14} />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    className="opacity-40 md:opacity-0 group-hover:opacity-40 hover:opacity-85! transition-opacity p-1 cursor-pointer"
+                    style={{ color: "rgba(255,255,255,0.8)" }}
+                  >
+                    <MoreVertical size={14} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-40 bg-[#2a3439] text-white border-2 border-dashed border-white/40 shadow-[2px_2px_0_rgba(0,0,0,0.4)] p-1 rounded-sm z-50"
+                >
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingApp(app);
+                    }}
+                    className="cursor-pointer hover:bg-white/10 focus:bg-white/10 flex items-center gap-2 text-xs font-sketch text-white uppercase tracking-wider"
+                  >
+                    <Edit size={12} />
+                    <span>Edit</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setContactsApp(app);
+                    }}
+                    className="cursor-pointer hover:bg-white/10 focus:bg-white/10 flex items-center gap-2 text-xs font-sketch text-white uppercase tracking-wider"
+                  >
+                    <Users size={12} />
+                    <span>Contacts</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isExecuting) deleteApp({ id: app.id });
+                    }}
+                    className="cursor-pointer text-red-400 hover:bg-white/10 focus:bg-white/10 hover:text-red-300 flex items-center gap-2 text-xs font-sketch uppercase tracking-wider"
+                  >
+                    <Trash2 size={12} />
+                    <span>Delete</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
@@ -164,16 +180,6 @@ export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
             >
               {SOURCE_LABELS[app.source] || app.source}
             </span>
-
-            {app.contacts.length > 0 && (
-              <span
-                className="text-xs flex items-center gap-1"
-                style={{ color: "rgba(255,255,255,0.45)" }}
-              >
-                <Users size={10} />
-                {app.contacts.length}
-              </span>
-            )}
 
             {app.salaryRange && (
               <span
@@ -191,86 +197,10 @@ export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
               style={{ color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-body, inherit)" }}
               suppressHydrationWarning
             >
-              {new Date(app.appliedDate).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
+              {formatRelativeDate(app.appliedDate)}
             </p>
           )}
         </div>
-
-        {/* Hover action buttons */}
-        <AnimatePresence>
-          {showActions && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: -5 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -5 }}
-              transition={{ duration: 0.12 }}
-              className="absolute top-8 lg:-top-8 lg:right-[28%] right-2 flex justify-end gap-1 z-30"
-              style={{ transformOrigin: "top right" }}
-            >
-              <div
-                className="flex items-center gap-1 px-2 py-1"
-                style={{
-                  background: "#2a3439",
-                  border: "2px dashed rgba(255,255,255,0.5)",
-                  borderRadius: "3px 6px 3px 5px",
-                  boxShadow: "2px 2px 0 rgba(0,0,0,0.4)",
-                }}
-              >
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditingApp(app);
-                  }}
-                  className="chalk-action-btn"
-                  title="Edit"
-                >
-                  <Edit size={13} />
-                </button>
-                <div
-                  style={{
-                    width: 1,
-                    height: 14,
-                    background: "rgba(255,255,255,0.2)",
-                    margin: "0 2px",
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setContactsApp(app);
-                  }}
-                  className="chalk-action-btn"
-                  title="Contacts"
-                >
-                  <Users size={13} />
-                </button>
-                <div
-                  style={{
-                    width: 1,
-                    height: 14,
-                    background: "rgba(255,255,255,0.2)",
-                    margin: "0 2px",
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!isExecuting) deleteApp({ id: app.id });
-                  }}
-                  className="chalk-action-btn"
-                  style={{ color: "rgba(248,113,113,0.85)" }}
-                  title="Delete"
-                  disabled={isExecuting}
-                >
-                  <Trash2 size={13} />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );

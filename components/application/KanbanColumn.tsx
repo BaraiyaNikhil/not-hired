@@ -1,11 +1,11 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/react";
-import { motion } from "motion/react";
 import { KanbanCard } from "./KanbanCard";
 import { AppWithContacts, KanbanColumn } from "@/types/kanban";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { useApplicationStore } from "@/store";
+import { useState, useEffect } from "react";
 
 interface KanbanColumnProps {
   column: KanbanColumn;
@@ -13,6 +13,7 @@ interface KanbanColumnProps {
 }
 
 export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
+  // Attach droppable ref to the entire column wrapper so drag hover detects even when collapsed
   const { ref, isDropTarget } = useDroppable({
     id: column.id,
     type: "column",
@@ -21,93 +22,123 @@ export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
 
   const { setApplicationFormOpen } = useApplicationStore();
 
+  // Collapse state for mobile only
+  const [isOpen, setIsOpen] = useState(apps.length > 0);
+
+  // Auto-expand on mobile when dragging a card over this column
+  useEffect(() => {
+    if (isDropTarget) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOpen(true);
+    }
+  }, [isDropTarget]);
+
   return (
-    <div className="flex flex-col shrink-0 w-full md:w-[260px] md:min-w-[260px]">
+    <div
+      ref={ref}
+      className={`flex flex-col shrink-0 w-full md:w-auto md:min-w-0 xl:w-[260px] xl:min-w-[260px] transition-all duration-300 ${
+        isOpen ? "h-[350px]" : "h-auto"
+      } md:h-[42dvh] xl:h-[60dvh]`}
+    >
       {/* Column header */}
       <div
-        className="flex items-center gap-2 mb-3 px-1"
+        className={`flex items-center gap-2 px-1 transition-all duration-300 ${isOpen ? "mb-3" : "mb-0 md:mb-3"}`}
         style={{ borderBottom: "2px dashed rgba(255,255,255,0.2)", paddingBottom: 8 }}
       >
         <span className="text-lg">{column.emoji}</span>
         <span className="font-sketch chalk-text text-lg tracking-wide">{column.label}</span>
-        <span
-          className="ml-auto text-sm font-mono"
-          style={{
-            color: "rgba(255,255,255,0.4)",
-            border: "1px dashed rgba(255,255,255,0.25)",
-            borderRadius: "2px",
-            padding: "0 6px",
-            fontFamily: "var(--font-body, inherit)",
-          }}
-        >
-          {apps.length}
-        </span>
+
+        <div className="ml-auto flex items-center gap-1.5">
+          <span
+            className="text-sm font-mono"
+            style={{
+              color: "rgba(255,255,255,0.4)",
+              border: "1px dashed rgba(255,255,255,0.25)",
+              borderRadius: "2px",
+              padding: "0 6px",
+              fontFamily: "var(--font-body, inherit)",
+            }}
+          >
+            {apps.length}
+          </span>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1 hover:bg-white/10 rounded-sm text-white/50 hover:text-white transition-colors cursor-pointer md:hidden"
+            title={isOpen ? "Collapse column" : "Expand column"}
+          >
+            {isOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+          </button>
+        </div>
       </div>
 
       {/* Drop zone */}
       <div
-        ref={ref}
-        className="flex-1 flex flex-col gap-3 min-h-[250px] rounded-sm transition-all duration-200"
+        className={`relative flex flex-col gap-3 rounded-sm overflow-hidden scroll-smooth transition-all duration-300 ${
+          isOpen
+            ? "flex-1 py-2 px-1 border-2 opacity-100 overflow-y-auto"
+            : "h-0 min-h-0 py-0 px-1 border-0 opacity-0 flex-none md:h-auto md:min-h-0 md:flex-1 md:py-2 md:border-2 md:opacity-100 md:overflow-y-auto"
+        }`}
         style={{
-          padding: "8px 4px",
           background: isDropTarget ? "rgba(255,255,255,0.06)" : column.color,
-          border: isDropTarget
-            ? "2px dashed rgba(255,255,255,0.5)"
-            : "2px dashed rgba(255,255,255,0.12)",
+          borderColor: isDropTarget ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)",
           borderRadius: "3px 6px 4px 5px",
-          minHeight: 250,
-          transition: "background 0.2s, border-color 0.2s",
+          borderStyle: "dashed",
         }}
       >
-        {apps.map((app, index) => (
-          <KanbanCard key={app.id} app={app} index={index} columnId={column.id} />
-        ))}
+        <div
+          className={`flex flex-col gap-3 h-full ${isOpen ? "visible" : "invisible md:visible"}`}
+        >
+          {apps.map((app, index) => (
+            <KanbanCard key={app.id} app={app} index={index} columnId={column.id} />
+          ))}
 
-        {apps.length === 0 && (
-          <div
-            className="flex flex-col items-center justify-center flex-1 gap-2"
-            style={{ minHeight: 80 }}
-          >
-            <p
-              className="text-xs text-center"
-              style={{ color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-body, inherit)" }}
+          {apps.length === 0 && (
+            <div
+              className="flex flex-col items-center justify-center flex-1 gap-2"
+              style={{ minHeight: 80 }}
             >
-              Drop here
-            </p>
-          </div>
-        )}
+              <p
+                className="text-xs text-center"
+                style={{
+                  color: "rgba(255,255,255,0.2)",
+                  fontFamily: "var(--font-body, inherit)",
+                }}
+              >
+                Drop here
+              </p>
+            </div>
+          )}
 
-        {/* Add card shortcut in Applied column */}
-        {column.id === "applied" && (
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setApplicationFormOpen(true)}
-            className="flex items-center justify-center gap-1 w-full mt-1"
-            style={{
-              border: "1px dashed rgba(255,255,255,0.2)",
-              borderRadius: "2px 5px 3px 4px",
-              padding: "6px",
-              color: "rgba(255,255,255,0.3)",
-              background: "transparent",
-              fontFamily: "var(--font-body, inherit)",
-              fontSize: 12,
-              cursor: "pointer",
-              transition: "color 0.15s, border-color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)";
-            }}
-          >
-            <Plus size={12} />
-            Add application
-          </motion.button>
-        )}
+          {/* Add card shortcut in Applied column */}
+          {column.id === "applied" && apps.length === 0 && (
+            <button
+              onClick={() => setApplicationFormOpen(true)}
+              className="absolute bottom-2 left-1 right-1 flex items-center justify-center gap-1 mt-1 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+              style={{
+                border: "1px dashed rgba(255,255,255,0.2)",
+                borderRadius: "2px 5px 3px 4px",
+                padding: "6px",
+                color: "rgba(255,255,255,0.3)",
+                background: "transparent",
+                fontFamily: "var(--font-body, inherit)",
+                fontSize: 12,
+                cursor: "pointer",
+                transition: "color 0.15s, border-color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)";
+              }}
+            >
+              <Plus size={12} />
+              Add application
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

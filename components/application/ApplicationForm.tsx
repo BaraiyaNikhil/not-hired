@@ -30,8 +30,10 @@ import { ApplicationFormBasicFields } from "./ApplicationFormBasicFields";
 import { ApplicationFormContacts } from "./ApplicationFormContacts";
 
 export function ApplicationForm({ trigger }: ApplicationFormProps) {
-  const { isApplicationFormOpen, setApplicationFormOpen, editingApp, setEditingApp } =
-    useApplicationStore();
+  const isApplicationFormOpen = useApplicationStore((state) => state.isApplicationFormOpen);
+  const setApplicationFormOpen = useApplicationStore((state) => state.setApplicationFormOpen);
+  const editingApp = useApplicationStore((state) => state.editingApp);
+  const setEditingApp = useApplicationStore((state) => state.setEditingApp);
   const isEditing = !!editingApp;
 
   const handleOpenChange = (newOpen: boolean) => {

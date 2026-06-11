@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, startTransition } from "react";
+import { useEffect, useRef, useCallback, startTransition, useState } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import { motion } from "motion/react";
 import { useAction } from "next-safe-action/hooks";
@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { useApplicationStore } from "@/store";
 import { changeApplicationStatusAction } from "@/actions/application/application.actions";
 import { KanbanColumnView } from "./KanbanColumn";
-import { ApplicationForm } from "./ApplicationForm";
-import { ContactsDialog } from "../contact/ContactsDialog";
 import { AppWithContacts, KANBAN_COLUMNS } from "@/types/kanban";
 import { Application } from "@prisma/client";
 import { Plus } from "lucide-react";
@@ -19,13 +17,21 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
-  const { applications, setApplications, moveApplication, setApplicationFormOpen } =
-    useApplicationStore();
+  const storeApps = useApplicationStore((state) => state.applications);
+  const setApplications = useApplicationStore((state) => state.setApplications);
+  const moveApplication = useApplicationStore((state) => state.moveApplication);
+  const setApplicationFormOpen = useApplicationStore((state) => state.setApplicationFormOpen);
+
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Sync store with server data
   useEffect(() => {
     setApplications(initialApplications);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsHydrated(true);
   }, [initialApplications, setApplications]);
+
+  const applications = isHydrated ? storeApps : initialApplications;
 
   const previousApplications = useRef(applications);
 
@@ -94,6 +100,11 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
 
       if (!newStatus || !KANBAN_COLUMNS.find((c) => c.id === newStatus)) return;
 
+      const previousApp = previousApplications.current.find((a) => a.id === cardId);
+      if (previousApp && previousApp.status === newStatus) {
+        return; // Don't call changeStatus if the status is the same
+      }
+
       // Persist to DB — optimistic move already happened in onDragOver
       startTransition(() => changeStatus({ id: cardId, status: newStatus }));
     },
@@ -131,23 +142,19 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
       </div>
 
       {/* Kanban columns */}
-      <div className="flex-1 overflow-x-auto pb-4">
+      <div className="flex-1 overflow-x-auto scrollbar-none">
         <DragDropProvider
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-col md:flex-row gap-5 h-full md:min-w-max">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-row gap-5 h-full xl:min-w-max">
             {KANBAN_COLUMNS.map((col) => (
               <KanbanColumnView key={col.id} column={col} apps={columnApps(col.id)} />
             ))}
           </div>
         </DragDropProvider>
       </div>
-
-      {/* Dialogs */}
-      <ApplicationForm />
-      <ContactsDialog />
     </div>
   );
 }

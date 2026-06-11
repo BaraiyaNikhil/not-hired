@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getApplications } from "@/services/application/application.service";
 import { KanbanBoard } from "@/components/application/KanbanBoard";
+import { KanbanDialogs } from "@/components/application/KanbanDialogs";
 
 export const metadata = {
   title: "Applications — Not Hired",
@@ -28,9 +29,10 @@ export default async function ApplicationsPage() {
         minHeight: "calc(100vh - 52px)",
       }}
     >
-      <div style={{ maxWidth: 1600, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1660, margin: "0 auto" }}>
         <KanbanBoard initialApplications={applications} />
       </div>
+      <KanbanDialogs />
     </div>
   );
 }

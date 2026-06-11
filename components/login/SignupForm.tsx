@@ -27,7 +27,7 @@ export function SignupForm({
   const { executeAsync, isExecuting } = useAction(signupAction, {
     onSuccess: () => {
       toast.success("Successfully signed in!");
-      router.replace("/dashboard");
+      router.replace("/applications");
     },
     onError: ({ error }) => {
       toast.error(error.serverError || "Failed to sign up");
