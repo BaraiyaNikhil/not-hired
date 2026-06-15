@@ -26,12 +26,9 @@ export function HeroSection() {
       <HeroBgAnimation />
 
       {/* H1 — Cabin Sketch */}
-      <motion.h1
-        className="font-sketch font-bold text-white/90 max-w-[840px] mb-6 relative z-10"
+      <h1
+        className="font-sketch font-bold text-white/90 max-w-[840px] mb-6 relative z-10 animate-fade-in-up"
         style={{ fontSize: "clamp(46px, 8.5vw, 90px)", lineHeight: 1.05 }}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
       >
         Stop guessing why
         <br />
@@ -53,31 +50,23 @@ export function HeroSection() {
             />
           </svg>
         </span>
-      </motion.h1>
+      </h1>
 
       {/* Subheading — Sniglet */}
-      <motion.p
-        className="text-white/50 max-w-[500px] mb-9 relative z-10"
+      <p
+        className="text-white/50 max-w-[500px] mb-9 relative z-10 animate-fade-in-up animation-delay-200"
         style={{
           fontSize: "clamp(15px, 2vw, 18px)",
           lineHeight: 1.75,
           fontFamily: "var(--font-body)",
         }}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.44 }}
       >
         NotHired tracks every application, reminds you to follow up, and tells you — without
         sugarcoating — exactly what&apos;s broken in your job search.
-      </motion.p>
+      </p>
 
       {/* CTAs */}
-      <motion.div
-        className="flex gap-4 items-center flex-wrap justify-center mb-[18px] relative z-10"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.54 }}
-      >
+      <div className="flex gap-4 items-center flex-wrap justify-center mb-[18px] relative z-10 animate-fade-in-up animation-delay-200">
         <Link
           href="/applications"
           className="text-base font-medium text-white/90 px-[30px] py-[13px] border-2 border-dashed border-white/65 bg-white/4 hover:bg-white/13 hover:scale-[1.02] transition-all no-underline"
@@ -92,22 +81,19 @@ export function HeroSection() {
         >
           See how it works ↓
         </a>
-      </motion.div>
+      </div>
 
       {/* Social proof */}
-      <motion.div
-        className="flex gap-5 justify-center flex-wrap text-[11px] text-white/50 relative z-10"
+      <div
+        className="flex gap-5 justify-center flex-wrap text-[11px] text-white/50 relative z-10 animate-fade-in-up animation-delay-200"
         style={{ fontFamily: "var(--font-body)" }}
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.62 }}
       >
         {["No resume required", "Free to start", "No fluff"].map((t) => (
           <span key={t} className="before:content-['✦_'] before:text-yellow-300">
             {t}
           </span>
         ))}
-      </motion.div>
+      </div>
 
       {/* Kanban board mockup */}
       <motion.div
