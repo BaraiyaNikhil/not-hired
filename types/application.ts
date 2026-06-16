@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ApplicationStatus } from "@prisma/client";
 
 export const createApplicationSchema = z.object({
   companyName: z.string().trim().min(1, "Company name is required"),
@@ -37,6 +38,28 @@ export const changeStatusSchema = z.object({
   status: z.enum(["applied", "screening", "interview", "offer", "rejected", "ghosted"]),
 });
 
+export const searchApplicationsSchema = z.object({
+  query: z.string().trim().default(""),
+});
+
 export type CreateApplicationInput = z.infer<typeof createApplicationSchema>;
 export type UpdateApplicationInput = z.infer<typeof updateApplicationSchema>;
 export type ChangeStatusInput = z.infer<typeof changeStatusSchema>;
+export type SearchApplicationsInput = z.infer<typeof searchApplicationsSchema>;
+
+export type StatusLogEntry = {
+  id: string;
+  applicationId: string;
+  fromStatus: ApplicationStatus | null;
+  toStatus: ApplicationStatus;
+  note: string | null;
+  createdAt: Date;
+};
+
+export type ApplicationSummary = {
+  id: string;
+  companyName: string;
+  roleTitle: string;
+  status: ApplicationStatus;
+  updatedAt: Date;
+};

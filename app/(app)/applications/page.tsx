@@ -1,31 +1,20 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { getApplications } from "@/services/application/application.service";
-import { KanbanBoard } from "@/components/application/KanbanBoard";
 import { KanbanDialogs } from "@/components/application/KanbanDialogs";
+import { Suspense } from "react";
+import ApplicationsBoard from "@/components/application/ApplicationsBoard";
+import { KanbanBoardSkeleton } from "@/components/skeleton/application/KanbanBoardSkeleton";
 
 export const metadata = {
   title: "Applications — Not Hired",
   description: "Track your job applications on the chalkboard Kanban board.",
 };
 
-export default async function ApplicationsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/login");
-  }
-
-  const applications = await getApplications(user.id);
-
+export default function ApplicationsPage() {
   return (
     <div className="overflow-auto px-4 py-6 md:px-7 md:py-7 md:pb-10 h-full">
       <div style={{ maxWidth: 1660, margin: "0 auto" }}>
-        <KanbanBoard initialApplications={applications} />
+        <Suspense fallback={<KanbanBoardSkeleton />}>
+          <ApplicationsBoard />
+        </Suspense>
       </div>
       <KanbanDialogs />
     </div>

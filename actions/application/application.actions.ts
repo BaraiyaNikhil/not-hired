@@ -5,6 +5,7 @@ import {
   createApplicationSchema,
   updateApplicationSchema,
   changeStatusSchema,
+  searchApplicationsSchema,
 } from "@/types/application";
 import * as applicationService from "@/services/application/application.service";
 import { revalidatePath } from "next/cache";
@@ -25,6 +26,7 @@ export const updateApplicationAction = authActionClient
     const result = await applicationService.updateApplication(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
     revalidatePath("/applications");
+    revalidatePath(`/applications/${parsedInput.id}`);
     return result;
   });
 
@@ -34,6 +36,7 @@ export const changeApplicationStatusAction = authActionClient
     const result = await applicationService.updateApplicationStatus(ctx.user.id, parsedInput);
     revalidatePath("/dashboard");
     revalidatePath("/applications");
+    revalidatePath(`/applications/${parsedInput.id}`);
     return result;
   });
 
@@ -44,4 +47,10 @@ export const deleteApplicationAction = authActionClient
     revalidatePath("/dashboard");
     revalidatePath("/applications");
     return result;
+  });
+
+export const searchApplicationsAction = authActionClient
+  .inputSchema(searchApplicationsSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    return applicationService.searchApplications(ctx.user.id, parsedInput);
   });

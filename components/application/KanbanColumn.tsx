@@ -73,7 +73,7 @@ export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
 
       {/* Drop zone */}
       <div
-        className={`relative flex flex-col gap-3 rounded-sm overflow-hidden scroll-smooth transition-all duration-300 ${
+        className={`relative flex flex-col gap-3 rounded-sm overflow-hidden scroll-smooth transition-all duration-300 scrollbar-none ${
           isOpen
             ? "flex-1 py-2 px-1 border-2 opacity-100 overflow-y-auto"
             : "h-0 min-h-0 py-0 px-1 border-0 opacity-0 flex-none md:h-auto md:min-h-0 md:flex-1 md:py-2 md:border-2 md:opacity-100 md:overflow-y-auto"

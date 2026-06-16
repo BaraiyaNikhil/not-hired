@@ -50,11 +50,25 @@ model Application {
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
 
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  contacts  Contact[]
-  reminders Reminder[]
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contacts   Contact[]
+  reminders  Reminder[]
+  statusLogs ApplicationStatusLog[]
 
   @@map("applications")
+}
+
+model ApplicationStatusLog {
+  id            String            @id @default(cuid())
+  applicationId String            @map("application_id")
+  fromStatus    ApplicationStatus? @map("from_status")
+  toStatus      ApplicationStatus @map("to_status")
+  note          String?
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_status_logs")
 }
 
 model Contact {
