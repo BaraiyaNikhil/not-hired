@@ -59,9 +59,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("h-full", "antialiased")} suppressHydrationWarning>
-      <head>
-        <meta name="theme-color" content="#2a3439" />
-      </head>
       <body
         className={cn(
           "min-h-full flex flex-col font-sans m-0 p-0 box-border",
