@@ -27,7 +27,7 @@
 
 1. **Components:** must use shadcn ui components when needed make list of components import it refctore and use, for custom components use tailwind css classes and arrange in there page name folder in `@/components/` folder or in `@/components/shared` folder. create new compoentes aggrassively and don't ever make it in same of page file import it to use it. make client components only it necessary not every component must be client component match components with chalk and board theme.
 2. **State Management:** use zustand for state management make store for all the moduls and wrap it and if need make one central store for data that need across all the components.
-3. **Types:** Always use typescript for type safety and save it under "types" folder in there respective folder.
+3. **Types:** Always use typescript for type safety and save it under "types" folder.
 4. **Auth:** all auth related logic use Clerk or NextAuth.
 5. **Database:** use postgresql for database and prisma as orm.
 6. **Animation:** use framer-motion for animations.
