@@ -60,11 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("h-full", "antialiased")} suppressHydrationWarning>
       <body
-        className={cn(
-          "min-h-full flex flex-col font-sans m-0 p-0 box-border",
-          sniglet.variable,
-          cabinSketch.variable
-        )}
+        className={cn("min-h-full flex flex-col font-sans", sniglet.variable, cabinSketch.variable)}
       >
         <ThemeProvider>
           {children}
