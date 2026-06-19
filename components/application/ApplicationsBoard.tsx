@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { getApplications } from "@/services/application/application.service";
+import { getApplications } from "@/services/application.service";
 import { KanbanBoard } from "./KanbanBoard";
 
 export default async function ApplicationsBoard() {

@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import * as dashboardService from "@/services/dashboard/dashboard.service";
+import * as dashboardService from "@/services/dashboard.service";
 import { HeaderStrip } from "@/components/dashboard/HeaderStrip";
 import { PipelineFunnel } from "@/components/dashboard/PipelineFunnel";
 import { SourceBreakdown } from "@/components/dashboard/SourceBreakdown";
@@ -9,6 +9,8 @@ import { StaleApplications } from "@/components/dashboard/StaleApplications";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { UpcomingReminders } from "@/components/dashboard/UpcomingReminders";
 import { AiInsights } from "@/components/dashboard/AiInsights";
+import { AiMentorComingSoon } from "@/components/dashboard/AiMentorComingSoon";
+import FeatureGuard from "@/components/shared/FeatureGuard";
 
 export const metadata = {
   title: "Dashboard — NotHired",
@@ -89,7 +91,9 @@ export default async function DashboardPage() {
 
       {/* Fourth row: AI Insights (1 row with 3 cards) */}
       <div className="w-full pb-6">
-        <AiInsights />
+        <FeatureGuard featureName="ai-insights" fallback={<AiMentorComingSoon />}>
+          <AiInsights />
+        </FeatureGuard>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { authActionClient } from "@/lib/safe-action";
 import { createContactSchema, updateContactSchema } from "@/types/contact";
-import * as contactService from "@/services/contact/contact.service";
+import * as contactService from "@/services/contact.service";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 

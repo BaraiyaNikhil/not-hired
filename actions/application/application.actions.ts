@@ -7,7 +7,7 @@ import {
   changeStatusSchema,
   searchApplicationsSchema,
 } from "@/types/application";
-import * as applicationService from "@/services/application/application.service";
+import * as applicationService from "@/services/application.service";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 

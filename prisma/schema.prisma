@@ -24,9 +24,10 @@ enum ApplicationSource {
 }
 
 model User {
-  id        String   @id // matches Supabase auth.users.id
+  id        String   @id
   email     String   @unique
   name      String?
+  isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
 
   applications Application[]
@@ -59,12 +60,12 @@ model Application {
 }
 
 model ApplicationStatusLog {
-  id            String            @id @default(cuid())
-  applicationId String            @map("application_id")
+  id            String             @id @default(cuid())
+  applicationId String             @map("application_id")
   fromStatus    ApplicationStatus? @map("from_status")
-  toStatus      ApplicationStatus @map("to_status")
+  toStatus      ApplicationStatus  @map("to_status")
   note          String?
-  createdAt     DateTime          @default(now()) @map("created_at")
+  createdAt     DateTime           @default(now()) @map("created_at")
 
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
@@ -97,4 +98,15 @@ model Reminder {
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reminders")
+}
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  isEnabled   Boolean  @map("is_enabled")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("feature_flags")
 }

@@ -2,10 +2,19 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, LayoutDashboard, LayoutGrid, Bell, Lightbulb, Menu, X } from "lucide-react";
+import {
+  BookOpen,
+  LayoutDashboard,
+  LayoutGrid,
+  Bell,
+  Lightbulb,
+  Menu,
+  X,
+  Flag,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
-import { logoutAction, getUserProfileAction } from "@/actions/auth";
+import { logoutAction, getUserProfileAction } from "@/actions/auth/auth.actions";
 import { ChalkNavDesktop } from "./ChalkNavDesktop";
 import { ChalkNavMobile } from "./ChalkNavMobile";
 
@@ -14,6 +23,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/reminders", label: "Reminders", icon: Bell },
   { href: "/insights", label: "Insights", icon: Lightbulb },
+  { href: "/feature-flags", label: "Feature flags", icon: Flag },
 ];
 
 type WelcomePhase = "welcome" | "user";
@@ -22,14 +32,15 @@ export function ChalkNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [phase, setPhase] = useState<WelcomePhase>("welcome");
   const [isOpen, setIsOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
 
-  // Fetch name from Prisma via server action
   const { execute: fetchProfile } = useAction(getUserProfileAction, {
     onSuccess: ({ data }) => {
       if (data?.name) setUserName(data.name);
+      if (data?.isAdmin) setIsAdmin(data.isAdmin);
     },
   });
 
@@ -38,14 +49,12 @@ export function ChalkNav() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // After 2.8s switch from welcome greeting to persistent user chip + logout
   useEffect(() => {
     if (!userName) return;
     const t = setTimeout(() => setPhase("user"), 2800);
     return () => clearTimeout(t);
   }, [userName]);
 
-  // Close menu on pathname change
   if (pathname !== prevPathname) {
     setIsOpen(false);
     setPrevPathname(pathname);
@@ -54,6 +63,13 @@ export function ChalkNav() {
   const { execute: logout, isPending: isLoggingOut } = useAction(logoutAction, {
     onSuccess: () => router.push("/login"),
     onError: () => router.push("/login"),
+  });
+
+  const filteredNavItems = navItems.filter((item) => {
+    if (item.href === "/feature-flags") {
+      return isAdmin;
+    }
+    return true;
   });
 
   return (
@@ -75,7 +91,7 @@ export function ChalkNav() {
         {/* Desktop Navigation */}
         <ChalkNavDesktop
           pathname={pathname}
-          navItems={navItems}
+          navItems={filteredNavItems}
           userName={userName}
           phase={phase}
           logout={logout}
@@ -100,7 +116,7 @@ export function ChalkNav() {
       {/* Mobile Drawer (underneath) */}
       <ChalkNavMobile
         pathname={pathname}
-        navItems={navItems}
+        navItems={filteredNavItems}
         userName={userName}
         phase={phase}
         logout={logout}
