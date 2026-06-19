@@ -8,7 +8,7 @@ import {
   loginWithGoogleService,
   logoutService,
   getUserProfileService,
-} from "@/services/auth/auth.service";
+} from "@/services/auth.service";
 
 export const signupAction = actionClient
   .inputSchema(signupSchema)
@@ -45,5 +45,5 @@ export const logoutAction = authActionClient.action(async () => {
 
 export const getUserProfileAction = authActionClient.action(async ({ ctx: { user } }) => {
   const result = await getUserProfileService(user.id);
-  return { name: result.name };
+  return { name: result.name, isAdmin: result.isAdmin };
 });

@@ -86,12 +86,15 @@ export async function getUserProfileService(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true },
+      select: { name: true, email: true, isAdmin: true },
     });
-    return { name: user?.name || user?.email?.split("@")[0] || "there" };
+    return {
+      name: user?.name || user?.email?.split("@")[0] || "there",
+      isAdmin: user?.isAdmin || false,
+    };
   } catch (e) {
     console.error("Failed to fetch user profile:", e);
-    return { name: "there" };
+    return { name: "there", isAdmin: false };
   }
 }
 

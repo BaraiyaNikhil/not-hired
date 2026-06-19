@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { getApplicationById, searchApplications } from "@/services/application/application.service";
+import { getApplicationById, searchApplications } from "@/services/application.service";
 import { ApplicationListSidebar } from "@/components/application/ApplicationListSidebar";
 import { ApplicationMobileSearch } from "@/components/application/ApplicationMobileSearch";
 import { DetailHeader } from "@/components/application/detail/DetailHeader";
