@@ -38,7 +38,10 @@ export async function updateSession(request: NextRequest) {
 
   const isAuthRoute =
     request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/auth");
-  const isPublicRoute = request.nextUrl.pathname === "/" || isAuthRoute;
+  const isPublicRoute =
+    request.nextUrl.pathname === "/" ||
+    isAuthRoute ||
+    request.nextUrl.pathname.startsWith("/api/cron");
 
   if (!user && !isPublicRoute) {
     // no user, potentially respond by redirecting the user to the login page
@@ -54,7 +57,7 @@ export async function updateSession(request: NextRequest) {
   // If user is signed in and the current path is /login redirect the user to / (or /dashboard)
   if (user && request.nextUrl.pathname.startsWith("/login")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/applications";
     const redirectResponse = NextResponse.redirect(url);
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value, cookie);

@@ -28,7 +28,7 @@ const navItems = [
 
 type WelcomePhase = "welcome" | "user";
 
-export function ChalkNav() {
+export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [userName, setUserName] = useState<string | null>(null);
@@ -96,6 +96,7 @@ export function ChalkNav() {
           phase={phase}
           logout={logout}
           isLoggingOut={isLoggingOut}
+          notificationBell={notificationBell}
         />
 
         {/* Mobile menu trigger */}
@@ -122,6 +123,7 @@ export function ChalkNav() {
         logout={logout}
         isLoggingOut={isLoggingOut}
         isOpen={isOpen}
+        notificationBell={notificationBell}
       />
     </nav>
   );
