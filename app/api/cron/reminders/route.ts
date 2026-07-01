@@ -77,13 +77,6 @@ export async function GET(req: NextRequest) {
           })
         );
 
-        await resend.emails.send({
-          from: `Nikhil Baraiya <${FROM_EMAIL}>`,
-          to: user.email,
-          subject: `📋 ${items.length} reminder${items.length > 1 ? "s" : ""} due today — NotHired`,
-          html,
-        });
-
         await prisma.$transaction(async (tx) => {
           await tx.notification.create({
             data: {
@@ -99,6 +92,17 @@ export async function GET(req: NextRequest) {
             where: { id: { in: reminderIds } },
             data: { digestSent: true, digestSentAt: new Date() },
           });
+
+          const { error: emailError } = await resend.emails.send({
+            from: `Nikhil Baraiya <${FROM_EMAIL}>`,
+            to: user.email,
+            subject: `📋 ${items.length} reminder${items.length > 1 ? "s" : ""} due today — NotHired`,
+            html,
+          });
+
+          if (emailError) {
+            throw new Error(emailError.message);
+          }
         });
 
         allSentIds.push(...reminderIds);
