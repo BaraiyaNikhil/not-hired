@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "motion/react";
 import { Edit, Trash2, Users, GripVertical, ExternalLink, MoreVertical } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -31,7 +32,7 @@ const SOURCE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
+export const KanbanCard = memo(function KanbanCard({ app, index, columnId }: KanbanCardProps) {
   const { setEditingApp, setContactsApp, deleteApplication } = useApplicationStore();
   const router = useRouter();
 
@@ -204,4 +205,4 @@ export function KanbanCard({ app, index, columnId }: KanbanCardProps) {
       </motion.div>
     </div>
   );
-}
+});

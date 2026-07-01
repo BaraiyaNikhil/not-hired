@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, startTransition, useState } from "react";
+import { useEffect, useRef, useCallback, startTransition, useState, useMemo } from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import { motion } from "motion/react";
 import { useAction } from "next-safe-action/hooks";
@@ -111,8 +111,18 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
     [changeStatus, setApplications]
   );
 
-  const columnApps = (colId: Application["status"]) =>
-    applications.filter((a) => a.status === colId);
+  const groupedApps = useMemo(() => {
+    const groups: Record<string, AppWithContacts[]> = {};
+    KANBAN_COLUMNS.forEach((col) => {
+      groups[col.id] = [];
+    });
+    applications.forEach((app) => {
+      if (groups[app.status]) {
+        groups[app.status].push(app);
+      }
+    });
+    return groups;
+  }, [applications]);
 
   return (
     <div className="flex flex-col h-full">
@@ -150,7 +160,7 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-row gap-5 h-full xl:min-w-max">
             {KANBAN_COLUMNS.map((col) => (
-              <KanbanColumnView key={col.id} column={col} apps={columnApps(col.id)} />
+              <KanbanColumnView key={col.id} column={col} apps={groupedApps[col.id] || []} />
             ))}
           </div>
         </DragDropProvider>

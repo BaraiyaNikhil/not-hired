@@ -11,7 +11,7 @@ export const metadata = {
   description: "View and manage your job search reminders — today, upcoming, and completed.",
 };
 
-async function RemindersContent() {
+export default async function RemindersPage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -64,13 +64,5 @@ async function RemindersContent() {
         collapsible
       />
     </div>
-  );
-}
-
-export default function RemindersPage() {
-  return (
-    <Suspense fallback={<ReminderPageSkeleton />}>
-      <RemindersContent />
-    </Suspense>
   );
 }

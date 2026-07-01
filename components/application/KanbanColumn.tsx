@@ -5,14 +5,17 @@ import { KanbanCard } from "./KanbanCard";
 import { AppWithContacts, KanbanColumn } from "@/types/kanban";
 import { Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { useApplicationStore } from "@/store";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 
 interface KanbanColumnProps {
   column: KanbanColumn;
   apps: AppWithContacts[];
 }
 
-export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
+export const KanbanColumnView = memo(function KanbanColumnView({
+  column,
+  apps,
+}: KanbanColumnProps) {
   // Attach droppable ref to the entire column wrapper so drag hover detects even when collapsed
   const { ref, isDropTarget } = useDroppable({
     id: column.id,
@@ -28,7 +31,6 @@ export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
   // Auto-expand on mobile when dragging a card over this column
   useEffect(() => {
     if (isDropTarget) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOpen(true);
     }
   }, [isDropTarget]);
@@ -142,4 +144,4 @@ export function KanbanColumnView({ column, apps }: KanbanColumnProps) {
       </div>
     </div>
   );
-}
+});
