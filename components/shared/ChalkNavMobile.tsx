@@ -18,6 +18,7 @@ interface ChalkNavMobileProps {
   logout: () => void;
   isLoggingOut: boolean;
   isOpen: boolean;
+  notificationBell?: React.ReactNode;
 }
 
 export function ChalkNavMobile({
@@ -28,6 +29,7 @@ export function ChalkNavMobile({
   logout,
   isLoggingOut,
   isOpen,
+  notificationBell,
 }: ChalkNavMobileProps) {
   return (
     <AnimatePresence>
@@ -56,7 +58,9 @@ export function ChalkNavMobile({
                     borderRadius: "2px 5px 3px 4px",
                   }}
                 >
-                  <Icon size={16} />
+                  <span className="relative">
+                    <Icon size={16} />
+                  </span>
                   <span>{item.label}</span>
                 </Link>
               );
@@ -64,43 +68,47 @@ export function ChalkNavMobile({
           </div>
 
           {/* Mobile User Section */}
-          {userName && (
-            <div className="flex flex-col gap-2 pt-3 border-t border-dashed border-white/10">
-              <div className="flex items-center justify-between px-3">
-                <div className="flex items-center gap-1.5">
-                  <User size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
-                  <span
-                    className="font-sketch chalk-text text-sm"
-                    style={{ color: "rgba(255,255,255,0.85)" }}
-                  >
-                    {userName}
-                  </span>
-                </div>
-                {/* Small welcome message if stage is welcome */}
-                {phase === "welcome" && (
-                  <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
-                    👋 Welcome!
-                  </span>
-                )}
-              </div>
+          <div className="flex flex-col gap-2 pt-3 border-t border-dashed border-white/10">
+            {notificationBell && <div className="flex justify-end px-3">{notificationBell}</div>}
 
-              <button
-                onClick={logout}
-                disabled={isLoggingOut}
-                className="flex items-center justify-center gap-1.5 px-3 py-2 text-sm cursor-pointer disabled:opacity-50"
-                style={{
-                  background: "rgba(255,80,80,0.08)",
-                  border: "1px dashed rgba(255,100,100,0.3)",
-                  borderRadius: "2px 5px 3px 4px",
-                  color: "rgba(255,140,140,0.85)",
-                  fontFamily: "var(--font-body, inherit)",
-                }}
-              >
-                <LogOut size={13} />
-                <span>{isLoggingOut ? "Signing out…" : "Logout"}</span>
-              </button>
-            </div>
-          )}
+            {userName && (
+              <>
+                <div className="flex items-center justify-between px-3">
+                  <div className="flex items-center gap-1.5">
+                    <User size={13} style={{ color: "rgba(255,255,255,0.5)" }} />
+                    <span
+                      className="font-sketch chalk-text text-sm"
+                      style={{ color: "rgba(255,255,255,0.85)" }}
+                    >
+                      {userName}
+                    </span>
+                  </div>
+                  {/* Small welcome message if stage is welcome */}
+                  {phase === "welcome" && (
+                    <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
+                      👋 Welcome!
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  onClick={logout}
+                  disabled={isLoggingOut}
+                  className="flex items-center justify-center gap-1.5 px-3 py-2 text-sm cursor-pointer disabled:opacity-50"
+                  style={{
+                    background: "rgba(255,80,80,0.08)",
+                    border: "1px dashed rgba(255,100,100,0.3)",
+                    borderRadius: "2px 5px 3px 4px",
+                    color: "rgba(255,140,140,0.85)",
+                    fontFamily: "var(--font-body, inherit)",
+                  }}
+                >
+                  <LogOut size={13} />
+                  <span>{isLoggingOut ? "Signing out…" : "Logout"}</span>
+                </button>
+              </>
+            )}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

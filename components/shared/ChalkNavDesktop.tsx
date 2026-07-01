@@ -17,6 +17,7 @@ interface ChalkNavDesktopProps {
   phase: "welcome" | "user";
   logout: () => void;
   isLoggingOut: boolean;
+  notificationBell?: React.ReactNode;
 }
 
 export function ChalkNavDesktop({
@@ -26,6 +27,7 @@ export function ChalkNavDesktop({
   phase,
   logout,
   isLoggingOut,
+  notificationBell,
 }: ChalkNavDesktopProps) {
   return (
     <>
@@ -45,7 +47,9 @@ export function ChalkNavDesktop({
                 borderRadius: "2px 5px 3px 4px",
               }}
             >
-              <Icon size={15} />
+              <span className="relative">
+                <Icon size={15} />
+              </span>
               <span>{item.label}</span>
               {isActive && (
                 <motion.div
@@ -66,9 +70,11 @@ export function ChalkNavDesktop({
 
       {/* Desktop User Section */}
       <div
-        className="hidden lg:flex shrink-0 items-center justify-end"
-        style={{ minWidth: 180, height: 32, overflow: "hidden" }}
+        className="hidden lg:flex shrink-0 items-center justify-end gap-3"
+        style={{ minWidth: 200, height: 32 }}
       >
+        {notificationBell}
+
         <AnimatePresence mode="wait" initial={false}>
           {!userName ? null : phase === "welcome" ? (
             <motion.div

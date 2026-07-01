@@ -7,7 +7,37 @@ import {
   ChangeStatusInput,
   SearchApplicationsInput,
 } from "@/types/application";
-import { ApplicationStatus, ApplicationSource } from "@prisma/client";
+import { ApplicationStatus, ApplicationSource, ReminderTrigger } from "@prisma/client";
+import { addDays } from "@/utils/date";
+
+type AutoReminderConfig = {
+  days: number;
+  message: string;
+  trigger: ReminderTrigger;
+};
+
+const AUTO_REMINDER_MAP: Partial<Record<ApplicationStatus, AutoReminderConfig>> = {
+  applied: {
+    days: 7,
+    message: "No response in 7 days. Follow up or move on.",
+    trigger: "AUTO_APPLIED",
+  },
+  screening: {
+    days: 3,
+    message: "Send a thank you email to your recruiter.",
+    trigger: "AUTO_SCREENING",
+  },
+  interview: {
+    days: 2,
+    message: "Send post-interview thank you note.",
+    trigger: "AUTO_INTERVIEW",
+  },
+  offer: {
+    days: 5,
+    message: "Offer deadline approaching. Have you decided?",
+    trigger: "AUTO_OFFER",
+  },
+};
 
 export async function getApplications(userId: string) {
   return prisma.application.findMany({
@@ -22,7 +52,10 @@ export async function getApplicationById(userId: string, id: string) {
     where: { id },
     include: {
       contacts: true,
-      reminders: true,
+      reminders: {
+        where: { isDone: false },
+        orderBy: { dueDate: "asc" },
+      },
       statusLogs: {
         orderBy: { createdAt: "desc" },
       },
@@ -59,37 +92,56 @@ export async function searchApplications(userId: string, data: SearchApplication
 }
 
 export async function createApplication(userId: string, data: CreateApplicationInput) {
-  return prisma.application.create({
-    data: {
-      userId,
-      companyName: data.companyName,
-      roleTitle: data.roleTitle,
-      status: data.status as ApplicationStatus,
-      source: data.source as ApplicationSource,
-      appliedDate: data.appliedDate ? new Date(data.appliedDate) : null,
-      salaryRange: data.salaryRange,
-      jobUrl: data.jobUrl,
-      notes: data.notes,
-      contacts:
-        data.contacts && data.contacts.length > 0
-          ? {
-              create: data.contacts.map((c) => ({
-                name: c.name,
-                role: c.role,
-                email: c.email,
-                mobile: c.mobile,
-                notes: c.notes,
-              })),
-            }
-          : undefined,
-      statusLogs: {
-        create: {
-          fromStatus: null,
-          toStatus: (data.status as ApplicationStatus) ?? "applied",
+  const initialStatus = (data.status as ApplicationStatus) ?? "applied";
+  const autoConfig = AUTO_REMINDER_MAP[initialStatus];
+
+  return prisma.$transaction(async (tx) => {
+    const app = await tx.application.create({
+      data: {
+        userId,
+        companyName: data.companyName,
+        roleTitle: data.roleTitle,
+        status: initialStatus,
+        source: data.source as ApplicationSource,
+        appliedDate: data.appliedDate ? new Date(data.appliedDate) : null,
+        salaryRange: data.salaryRange,
+        jobUrl: data.jobUrl,
+        notes: data.notes,
+        contacts:
+          data.contacts && data.contacts.length > 0
+            ? {
+                create: data.contacts.map((c) => ({
+                  name: c.name,
+                  role: c.role,
+                  email: c.email,
+                  mobile: c.mobile,
+                  notes: c.notes,
+                })),
+              }
+            : undefined,
+        statusLogs: {
+          create: {
+            fromStatus: null,
+            toStatus: initialStatus,
+          },
         },
       },
-    },
-    include: { contacts: true },
+      include: { contacts: true },
+    });
+
+    if (autoConfig) {
+      await tx.reminder.create({
+        data: {
+          userId,
+          applicationId: app.id,
+          message: autoConfig.message,
+          dueDate: addDays(new Date(), autoConfig.days),
+          trigger: autoConfig.trigger,
+        },
+      });
+    }
+
+    return app;
   });
 }
 
@@ -97,42 +149,71 @@ export async function updateApplication(userId: string, data: UpdateApplicationI
   const app = await prisma.application.findUnique({ where: { id: data.id } });
   if (!app || app.userId !== userId) throw new Error("Unauthorized");
 
-  const needsStatusLog = data.status && data.status !== app.status;
+  const newStatus = data.status as ApplicationStatus;
+  const statusChanged = data.status && newStatus !== app.status;
+  const autoConfig = statusChanged ? AUTO_REMINDER_MAP[newStatus] : undefined;
 
-  return prisma.application.update({
-    where: { id: data.id },
-    data: {
-      companyName: data.companyName,
-      roleTitle: data.roleTitle,
-      status: data.status as ApplicationStatus,
-      source: data.source as ApplicationSource,
-      appliedDate: data.appliedDate ? new Date(data.appliedDate) : null,
-      salaryRange: data.salaryRange,
-      jobUrl: data.jobUrl,
-      notes: data.notes,
-      contacts: {
-        deleteMany: {},
-        create:
-          data.contacts?.map((c) => ({
-            name: c.name,
-            role: c.role,
-            email: c.email,
-            mobile: c.mobile,
-            notes: c.notes,
-          })) || [],
-      },
-      ...(needsStatusLog
-        ? {
-            statusLogs: {
-              create: {
-                fromStatus: app.status,
-                toStatus: data.status as ApplicationStatus,
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.application.update({
+      where: { id: data.id },
+      data: {
+        companyName: data.companyName,
+        roleTitle: data.roleTitle,
+        status: newStatus,
+        source: data.source as ApplicationSource,
+        appliedDate: data.appliedDate ? new Date(data.appliedDate) : null,
+        salaryRange: data.salaryRange,
+        jobUrl: data.jobUrl,
+        notes: data.notes,
+        contacts: {
+          deleteMany: {},
+          create:
+            data.contacts?.map((c) => ({
+              name: c.name,
+              role: c.role,
+              email: c.email,
+              mobile: c.mobile,
+              notes: c.notes,
+            })) || [],
+        },
+        ...(statusChanged
+          ? {
+              statusLogs: {
+                create: {
+                  fromStatus: app.status,
+                  toStatus: newStatus,
+                },
               },
-            },
-          }
-        : {}),
-    },
-    include: { contacts: true },
+            }
+          : {}),
+      },
+      include: { contacts: true },
+    });
+
+    if (statusChanged) {
+      await tx.reminder.updateMany({
+        where: {
+          applicationId: data.id,
+          isDone: false,
+          trigger: { not: "MANUAL" },
+        },
+        data: { isDone: true, doneAt: new Date() },
+      });
+
+      if (autoConfig) {
+        await tx.reminder.create({
+          data: {
+            userId,
+            applicationId: data.id,
+            message: autoConfig.message,
+            dueDate: addDays(new Date(), autoConfig.days),
+            trigger: autoConfig.trigger,
+          },
+        });
+      }
+    }
+
+    return updated;
   });
 }
 
@@ -140,17 +221,45 @@ export async function updateApplicationStatus(userId: string, data: ChangeStatus
   const app = await prisma.application.findUnique({ where: { id: data.id } });
   if (!app || app.userId !== userId) throw new Error("Unauthorized");
 
-  return prisma.application.update({
-    where: { id: data.id },
-    data: {
-      status: data.status as ApplicationStatus,
-      statusLogs: {
-        create: {
-          fromStatus: app.status,
-          toStatus: data.status as ApplicationStatus,
+  const newStatus = data.status as ApplicationStatus;
+  const autoConfig = AUTO_REMINDER_MAP[newStatus];
+
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.application.update({
+      where: { id: data.id },
+      data: {
+        status: newStatus,
+        statusLogs: {
+          create: {
+            fromStatus: app.status,
+            toStatus: newStatus,
+          },
         },
       },
-    },
+    });
+
+    await tx.reminder.updateMany({
+      where: {
+        applicationId: data.id,
+        isDone: false,
+        trigger: { not: "MANUAL" },
+      },
+      data: { isDone: true, doneAt: new Date() },
+    });
+
+    if (autoConfig) {
+      await tx.reminder.create({
+        data: {
+          userId,
+          applicationId: data.id,
+          message: autoConfig.message,
+          dueDate: addDays(new Date(), autoConfig.days),
+          trigger: autoConfig.trigger,
+        },
+      });
+    }
+
+    return updated;
   });
 }
 
