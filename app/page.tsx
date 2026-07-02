@@ -4,7 +4,6 @@ import { MarqueeStrip } from "@/components/landing/MarqueeStrip";
 import { ProblemSection } from "@/components/landing/PainSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import { HonestySection } from "@/components/landing/AISection";
-import { StatsAndStepsSection } from "@/components/landing/StatsSection";
 import { CtaSection } from "@/components/landing/CtaSection";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import type { Metadata } from "next";
@@ -52,7 +51,6 @@ export default function Home() {
         <ProblemSection />
         <FeaturesSection />
         <HonestySection />
-        <StatsAndStepsSection />
         <CtaSection />
       </main>
       <LandingFooter />

@@ -11,7 +11,7 @@ export const HERO_STAGES: StageItem[] = [
 
 export const HERO_FLOAT_CARDS: FloatCard[] = [
   {
-    company: "Stripe",
+    company: "Chai",
     stage: "Applied",
     top: "13%",
     left: "4%",
@@ -19,7 +19,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     color: "rgba(96,165,250,0.15)",
   },
   {
-    company: "Vercel",
+    company: "Biryani",
     stage: "Offer",
     top: "28%",
     left: "16%",
@@ -27,7 +27,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     color: "rgba(74,222,128,0.13)",
   },
   {
-    company: "Linear",
+    company: "Samosa",
     stage: "Screening",
     top: "58%",
     left: "6%",
@@ -35,7 +35,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     color: "rgba(251,191,36,0.13)",
   },
   {
-    company: "Figma",
+    company: "Dosa",
     stage: "Rejected",
     top: "20%",
     left: "80%",
@@ -43,7 +43,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     color: "rgba(248,113,113,0.13)",
   },
   {
-    company: "GitHub",
+    company: "Idli",
     stage: "Ghosted",
     top: "46%",
     left: "80%",
@@ -51,7 +51,7 @@ export const HERO_FLOAT_CARDS: FloatCard[] = [
     color: "rgba(156,163,175,0.12)",
   },
   {
-    company: "Airbnb",
+    company: "Roti",
     stage: "Screening",
     top: "38%",
     left: "58%",
@@ -87,9 +87,9 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     bg: "rgba(96,165,250,0.18)",
     border: "rgba(96,165,250,0.35)",
     cards: [
-      { co: "Stripe", role: "Frontend Engineer", source: "LinkedIn", date: "Jun 3" },
-      { co: "Notion", role: "Full Stack Dev", source: "Referral", date: "Jun 1" },
-      { co: "Linear", role: "Software Engineer", source: "Cold Email", date: "Jun 5" },
+      { co: "Chai", role: "Masala Maker", source: "LinkedIn", date: "Jun 3" },
+      { co: "Roti", role: "Round FS", source: "Referral", date: "Jun 1" },
+      { co: "Lassi", role: "Sweet Dev", source: "Cold Email", date: "Jun 5" },
     ],
   },
   {
@@ -99,8 +99,8 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     bg: "rgba(251,191,36,0.18)",
     border: "rgba(251,191,36,0.35)",
     cards: [
-      { co: "Shopify", role: "FS Developer", source: "Job Portal", date: "May 28" },
-      { co: "Clerk", role: "React Engineer", source: "LinkedIn", date: "May 30" },
+      { co: "Samosa", role: "Chutney Eng", source: "Job Portal", date: "May 28" },
+      { co: "Pakora", role: "Fryer", source: "LinkedIn", date: "May 30" },
     ],
   },
   {
@@ -109,7 +109,7 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     emoji: "🎤",
     bg: "rgba(167,139,250,0.18)",
     border: "rgba(167,139,250,0.35)",
-    cards: [{ co: "Vercel", role: "React Engineer", source: "Referral", date: "May 25" }],
+    cards: [{ co: "Biryani", role: "Spice 🎯", source: "Referral", date: "May 25" }],
   },
   {
     id: "offer",
@@ -117,7 +117,7 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     emoji: "🎉",
     bg: "rgba(74,222,128,0.18)",
     border: "rgba(74,222,128,0.35)",
-    cards: [{ co: "Google", role: "SWE", source: "LinkedIn", date: "Jun 3" }],
+    cards: [{ co: "Papad", role: "Crunch SWE", source: "LinkedIn", date: "Jun 3" }],
   },
   {
     id: "rejected",
@@ -126,8 +126,8 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     bg: "rgba(248,113,113,0.18)",
     border: "rgba(248,113,113,0.3)",
     cards: [
-      { co: "Figma", role: "Frontend Dev", source: "LinkedIn", date: "May 20" },
-      { co: "Loom", role: "Software Engineer", source: "Job Portal", date: "May 22" },
+      { co: "Dosa", role: "Batter FS", source: "LinkedIn", date: "May 20" },
+      { co: "Idli", role: "Steam SWE", source: "Job Portal", date: "May 22" },
     ],
   },
   {
@@ -136,6 +136,6 @@ export const HERO_BOARD_COLUMNS: BoardColumn[] = [
     emoji: "👻",
     bg: "rgba(156,163,175,0.18)",
     border: "rgba(156,163,175,0.3)",
-    cards: [{ co: "Airbnb", role: "UI Engineer", source: "LinkedIn", date: "May 15" }],
+    cards: [{ co: "Vada", role: "Hole QA", source: "LinkedIn", date: "May 15" }],
   },
 ];

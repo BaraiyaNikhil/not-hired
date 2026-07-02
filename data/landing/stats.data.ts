@@ -1,22 +1,4 @@
-import type { HowStep, InsightItem, UpcomingFeature } from "./types";
-
-export const HOW_STEPS: HowStep[] = [
-  {
-    num: "01",
-    title: "Add your applications",
-    body: "Log each one in seconds. Company, role, source, date. No setup, no required fields, no friction.",
-  },
-  {
-    num: "02",
-    title: "Track every move",
-    body: "Update status as things progress. Set follow-up reminders. Add notes from calls. Build a real picture.",
-  },
-  {
-    num: "03",
-    title: "Get the brutal truth",
-    body: "Your AI coach analyzes the data and tells you what to fix. Not what you want to hear — what you need to.",
-  },
-];
+import type { InsightItem } from "./types";
 
 export const HONESTY_TERMINAL_ROWS: [string, string, string?][] = [
   ["Applications :", "47"],
@@ -49,27 +31,5 @@ export const HONESTY_INSIGHTS: InsightItem[] = [
     emoji: "🟢",
     delay: 0.33,
     text: "Cold email is your best performing channel at 14% response rate. Double down — it's the one thing working.",
-  },
-];
-
-import aiMentorIcon from "@/assets/icons/ai-mentor.svg";
-import analyticsIcon from "@/assets/icons/analytics.svg";
-import smartAlertsIcon from "@/assets/icons/smart-alerts.svg";
-
-export const UPCOMING_FEATURES: UpcomingFeature[] = [
-  {
-    icon: aiMentorIcon,
-    label: "AI Mentor",
-    desc: "Brutally honest career coaching powered by your real data",
-  },
-  {
-    icon: analyticsIcon,
-    label: "Analytics",
-    desc: "Source performance, conversion funnels, response trends",
-  },
-  {
-    icon: smartAlertsIcon,
-    label: "Smart Alerts",
-    desc: "Auto-detect stale applications and missed follow-ups",
   },
 ];

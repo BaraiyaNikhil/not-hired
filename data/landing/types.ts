@@ -74,12 +74,14 @@ export type InsightItem = {
 };
 
 export type ReminderItem = {
+  message: string;
   company: string;
   role: string;
   appliedInfo: string;
   urgency: "now" | "soon" | "later";
   urgencyLabel?: string;
   dueLabel?: string;
+  triggerLabel?: string;
 };
 
 import type { StaticImageData } from "next/image";

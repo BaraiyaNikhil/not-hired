@@ -34,7 +34,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-blue-400",
     bg: "rgba(96,165,250,0.25)",
     border: "rgba(96,165,250,0.3)",
-    cards: ["Airbnb · Frontend", "GitHub · UI Eng", "Shopify · FS Dev"],
+    cards: ["Chai · Masala Maker", "Samosa · Chutney Eng", "Lassi · Sweet Dev"],
   },
   {
     label: "Screening",
@@ -42,7 +42,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-yellow-300",
     bg: "rgba(251,191,36,0.25)",
     border: "rgba(251,191,36,0.3)",
-    cards: ["Figma · Eng", "Clerk · FS Dev"],
+    cards: ["Pakora · Fryer", "Jalebi · Sugar FS"],
   },
   {
     label: "Interview",
@@ -50,7 +50,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-purple-400",
     bg: "rgba(167,139,250,0.25)",
     border: "rgba(167,139,250,0.35)",
-    cards: ["Vercel · Eng 🎯"],
+    cards: ["Biryani · Spice 🎯"],
   },
   {
     label: "Offer",
@@ -58,7 +58,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-green-400",
     bg: "rgba(74,222,128,0.25)",
     border: "rgba(74,222,128,0.35)",
-    cards: ["Meta · SWE"],
+    cards: ["Dosa · Batter SWE"],
   },
   {
     label: "Rejected",
@@ -66,7 +66,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-red-400",
     bg: "rgba(248,113,113,0.25)",
     border: "rgba(248,113,113,0.25)",
-    cards: ["Loom · SWE", "Linear · SWE"],
+    cards: ["Idli · Steam SWE", "Vada · Hole SWE"],
   },
   {
     label: "Ghosted",
@@ -74,7 +74,7 @@ export const PIPELINE_COLUMNS: PipelineColumn[] = [
     textColor: "text-gray-400",
     bg: "rgba(156,163,175,0.25)",
     border: "rgba(156,163,175,0.25)",
-    cards: ["Notion · FS"],
+    cards: ["Roti · Round FS"],
   },
 ];
 
@@ -104,22 +104,27 @@ export const AI_INSIGHTS: InsightItem[] = [
 
 export const REMINDER_ITEMS: ReminderItem[] = [
   {
-    company: "Notion",
-    role: "Full Stack Engineer",
+    message: "Follow up on application",
+    company: "Chai",
+    role: "Masala Maker",
     appliedInfo: "Applied 6 days ago",
     urgency: "now",
-    urgencyLabel: "⚡ Follow up now",
+    urgencyLabel: "Due today",
+    triggerLabel: "Auto",
   },
   {
-    company: "Loom",
-    role: "Frontend Dev",
+    message: "Check in after screening",
+    company: "Samosa",
+    role: "Chutney Eng",
     appliedInfo: "Applied 3 days ago",
     urgency: "soon",
     dueLabel: "Due in 2 days",
+    triggerLabel: "Auto",
   },
   {
-    company: "Linear",
-    role: "Software Engineer",
+    message: "Prepare for technical round",
+    company: "Lassi",
+    role: "Sweet Dev",
     appliedInfo: "Applied 1 day ago",
     urgency: "later",
     dueLabel: "Due in 4 days",
