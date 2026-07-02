@@ -1,9 +1,7 @@
-import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getTodayReminders, getUpcomingReminders } from "@/services/reminder.service";
 import { ReminderList } from "@/components/reminder/ReminderList";
-import { ReminderPageSkeleton } from "@/components/skeleton/reminder/ReminderPageSkeleton";
 import { Bell } from "lucide-react";
 
 export const metadata = {

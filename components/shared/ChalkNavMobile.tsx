@@ -18,7 +18,6 @@ interface ChalkNavMobileProps {
   logout: () => void;
   isLoggingOut: boolean;
   isOpen: boolean;
-  notificationBell?: React.ReactNode;
 }
 
 export function ChalkNavMobile({
@@ -29,7 +28,6 @@ export function ChalkNavMobile({
   logout,
   isLoggingOut,
   isOpen,
-  notificationBell,
 }: ChalkNavMobileProps) {
   return (
     <AnimatePresence>
@@ -69,8 +67,6 @@ export function ChalkNavMobile({
 
           {/* Mobile User Section */}
           <div className="flex flex-col gap-2 pt-3 border-t border-dashed border-white/10">
-            {notificationBell && <div className="flex justify-end px-3">{notificationBell}</div>}
-
             {userName && (
               <>
                 <div className="flex items-center justify-between px-3">

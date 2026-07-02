@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { useInView } from "react-intersection-observer";
-import Link from "next/link";
-import { formatDistanceToNow } from "@/utils/date";
 
 import {
   DropdownMenu,
@@ -13,28 +10,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  getNotificationsAction,
   getUnreadNotificationCountAction,
   markAllNotificationsAsReadAction,
 } from "@/actions/notification/notification.actions";
-import { NotificationType } from "@prisma/client";
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: NotificationType;
-  link: string | null;
-  isRead: boolean;
-  createdAt: Date;
-}
+import { NotificationList } from "./NotificationList";
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const [hasMore, setHasMore] = useState(true);
 
   // Actions
   const { execute: fetchCount } = useAction(getUnreadNotificationCountAction, {
@@ -43,50 +26,17 @@ export function NotificationBell() {
     },
   });
 
-  const { execute: fetchNotifications, isExecuting: isFetching } = useAction(
-    getNotificationsAction,
-    {
-      onSuccess: ({ data }) => {
-        if (data) {
-          setNotifications((prev) => {
-            // Avoid duplicates
-            const newIds = data.notifications.map((n) => n.id);
-            const filteredPrev = prev.filter((n) => !newIds.includes(n.id));
-            return [...filteredPrev, ...data.notifications];
-          });
-          setCursor(data.nextCursor);
-          setHasMore(!!data.nextCursor);
-        }
-      },
-    }
-  );
-
   const { execute: markAsRead } = useAction(markAllNotificationsAsReadAction, {
     onSuccess: () => {
       setUnreadCount(0);
-      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     },
-  });
-
-  // Intersection Observer for infinite scrolling
-  const { ref, inView } = useInView({
-    threshold: 0,
   });
 
   // Initial load
   useEffect(() => {
     fetchCount();
-    fetchNotifications({ cursor: undefined, limit: 10 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Load more when sentinel is in view
-  useEffect(() => {
-    if (inView && hasMore && !isFetching) {
-      fetchNotifications({ cursor, limit: 10 });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, hasMore, isFetching, cursor]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -126,49 +76,8 @@ export function NotificationBell() {
           <h3 className="font-sketch chalk-text text-lg">Notifications</h3>
         </div>
 
-        {notifications.length === 0 ? (
-          <div className="p-6 text-center text-sm font-body text-white/40">
-            No notifications yet.
-          </div>
-        ) : (
-          <div className="flex flex-col">
-            {notifications.map((notification) => {
-              const content = (
-                <div
-                  className={`px-4 py-3 border-b border-dashed border-white/5 hover:bg-white/5 transition-colors cursor-pointer ${
-                    !notification.isRead ? "bg-white/3" : ""
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="font-sketch text-white/90 text-md">{notification.title}</span>
-                    <span className="text-[10px] font-body text-white/40">
-                      {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-                    </span>
-                  </div>
-                  <p className="text-sm font-body text-white/60">{notification.message}</p>
-                </div>
-              );
-
-              return notification.link ? (
-                <Link
-                  key={notification.id}
-                  href={notification.link}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {content}
-                </Link>
-              ) : (
-                <div key={notification.id}>{content}</div>
-              );
-            })}
-
-            {hasMore && (
-              <div ref={ref} className="p-4 flex justify-center text-sm font-body text-white/40">
-                {isFetching ? "Loading more..." : ""}
-              </div>
-            )}
-          </div>
-        )}
+        {/* The list will mount and fetch only when the dropdown is open */}
+        {isOpen && <NotificationList closeMenu={() => setIsOpen(false)} />}
       </DropdownMenuContent>
     </DropdownMenu>
   );
