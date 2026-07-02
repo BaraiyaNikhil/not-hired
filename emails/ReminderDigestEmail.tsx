@@ -220,13 +220,40 @@ export function ReminderDigestEmail({ userName, reminders, appUrl }: ReminderDig
           >
             <Text
               style={{
-                margin: 0,
+                margin: "0 0 8px",
                 fontSize: "11px",
                 color: colors.textMuted,
                 textAlign: "center" as const,
               }}
             >
               NotHired · Your job search, tracked.
+            </Text>
+            <Text
+              style={{
+                margin: "0 0 8px",
+                fontSize: "11px",
+                color: colors.textMuted,
+                textAlign: "center" as const,
+              }}
+            >
+              123 Startup Ave, Suite 100, San Francisco, CA 94107
+            </Text>
+            <Text
+              style={{
+                margin: 0,
+                fontSize: "11px",
+                color: colors.textMuted,
+                textAlign: "center" as const,
+              }}
+            >
+              Don&apos;t want to receive these daily digests?{" "}
+              <Link
+                href={`${appUrl}/settings`}
+                style={{ color: colors.accentLight, textDecoration: "underline" }}
+              >
+                Unsubscribe here
+              </Link>
+              .
             </Text>
           </Section>
         </Container>

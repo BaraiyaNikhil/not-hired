@@ -4,10 +4,11 @@ import { render } from "@react-email/render";
 import { ReminderDigestEmail } from "@/emails/ReminderDigestEmail";
 import { getDueRemindersForDigest } from "@/services/reminder.service";
 import { prisma } from "@/lib/db";
+import { createElement } from "react";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://not-hired.vercel.app";
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "reminders@not-hired.app";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "reminders@nothired.dpdns.org";
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -69,13 +70,15 @@ export async function GET(req: NextRequest) {
 
     for (const [, { user, reminderIds, items }] of byUser) {
       try {
-        const html = await render(
-          ReminderDigestEmail({
-            userName: user.name ?? user.email.split("@")[0],
-            reminders: items,
-            appUrl: APP_URL,
-          })
-        );
+        const element = createElement(ReminderDigestEmail, {
+          userName: user.name ?? user.email.split("@")[0],
+          reminders: items,
+          appUrl: APP_URL,
+        });
+        const [html, text] = await Promise.all([
+          render(element),
+          render(element, { plainText: true }),
+        ]);
 
         await prisma.$transaction(async (tx) => {
           await tx.notification.create({
@@ -96,8 +99,9 @@ export async function GET(req: NextRequest) {
           const { error: emailError } = await resend.emails.send({
             from: `Nikhil Baraiya <${FROM_EMAIL}>`,
             to: user.email,
-            subject: `📋 ${items.length} reminder${items.length > 1 ? "s" : ""} due today — NotHired`,
-            html,
+            subject: `${items.length} reminder${items.length > 1 ? "s" : ""} due today — NotHired`,
+            html: html,
+            text: text,
           });
 
           if (emailError) {
