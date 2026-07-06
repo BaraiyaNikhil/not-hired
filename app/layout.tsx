@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "NotHired" }],
   creator: "NotHired",
-  metadataBase: new URL("https://nothired.app"),
+  metadataBase: new URL("https://not-hired.vercel.app/"),
   openGraph: {
     type: "website",
     locale: "en_US",

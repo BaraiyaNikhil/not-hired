@@ -1,17 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  BookOpen,
-  LayoutDashboard,
-  LayoutGrid,
-  Bell,
-  Lightbulb,
-  Menu,
-  X,
-  Flag,
-} from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Bell, Lightbulb, Menu, X, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { logoutAction, getUserProfileAction } from "@/actions/auth/auth.actions";
@@ -85,7 +77,7 @@ export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactN
       <div className="flex items-center justify-between gap-2 py-2 px-4 lg:px-6 h-14 w-full">
         {/* Logo */}
         <Link href="/applications" className="flex items-center gap-2 shrink-0 mr-4">
-          <BookOpen size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
+          <Image src="/Logo.png" alt="NotHired Logo" width={40} height={40} className="rounded" />
           <span className="font-sketch chalk-text text-xl tracking-wide">NotHired</span>
         </Link>
 
