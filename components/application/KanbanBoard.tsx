@@ -14,22 +14,27 @@ import { Plus } from "lucide-react";
 
 interface KanbanBoardProps {
   initialApplications: AppWithContacts[];
+  initialCounts: { total: number; counts: Record<string, number> };
 }
 
-export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
+export function KanbanBoard({ initialApplications, initialCounts }: KanbanBoardProps) {
   const storeApps = useApplicationStore((state) => state.applications);
   const setApplications = useApplicationStore((state) => state.setApplications);
   const moveApplication = useApplicationStore((state) => state.moveApplication);
   const setApplicationFormOpen = useApplicationStore((state) => state.setApplicationFormOpen);
+
+  const setApplicationCounts = useApplicationStore((state) => state.setApplicationCounts);
+  const applicationCounts = useApplicationStore((state) => state.applicationCounts);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Sync store with server data
   useEffect(() => {
     setApplications(initialApplications);
+    setApplicationCounts(initialCounts);
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsHydrated(true);
-  }, [initialApplications, setApplications]);
+  }, [initialApplications, initialCounts, setApplications, setApplicationCounts]);
 
   const applications = isHydrated ? storeApps : initialApplications;
 
@@ -136,7 +141,8 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
             className="mt-1 text-xs md:text-sm"
             style={{ color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-body, inherit)" }}
           >
-            {applications.length} application{applications.length !== 1 ? "s" : ""} tracked
+            {isHydrated ? applicationCounts.total : initialCounts.total} application
+            {(isHydrated ? applicationCounts.total : initialCounts.total) !== 1 ? "s" : ""} tracked
           </p>
         </div>
 
@@ -160,7 +166,16 @@ export function KanbanBoard({ initialApplications }: KanbanBoardProps) {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-row gap-5 h-full xl:min-w-max">
             {KANBAN_COLUMNS.map((col) => (
-              <KanbanColumnView key={col.id} column={col} apps={groupedApps[col.id] || []} />
+              <KanbanColumnView
+                key={col.id}
+                column={col}
+                apps={groupedApps[col.id] || []}
+                totalCount={
+                  isHydrated
+                    ? applicationCounts.counts[col.id] || 0
+                    : initialCounts.counts[col.id] || 0
+                }
+              />
             ))}
           </div>
         </DragDropProvider>

@@ -6,6 +6,7 @@ import {
   updateApplicationSchema,
   changeStatusSchema,
   searchApplicationsSchema,
+  loadMoreApplicationsSchema,
 } from "@/types/application";
 import * as applicationService from "@/services/application.service";
 import { revalidatePath } from "next/cache";
@@ -53,4 +54,14 @@ export const searchApplicationsAction = authActionClient
   .inputSchema(searchApplicationsSchema)
   .action(async ({ parsedInput, ctx }) => {
     return applicationService.searchApplications(ctx.user.id, parsedInput);
+  });
+
+export const loadMoreApplicationsAction = authActionClient
+  .inputSchema(loadMoreApplicationsSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    return applicationService.getMoreApplications(
+      ctx.user.id,
+      parsedInput.status,
+      parsedInput.cursorId
+    );
   });

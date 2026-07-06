@@ -3,18 +3,24 @@
 import { useDroppable } from "@dnd-kit/react";
 import { KanbanCard } from "./KanbanCard";
 import { AppWithContacts, KanbanColumn } from "@/types/kanban";
-import { Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useApplicationStore } from "@/store";
 import { useState, useEffect, memo } from "react";
+import { useInView } from "react-intersection-observer";
+import { useAction } from "next-safe-action/hooks";
+import { loadMoreApplicationsAction } from "@/actions/application/application.actions";
+import { toast } from "sonner";
 
 interface KanbanColumnProps {
   column: KanbanColumn;
   apps: AppWithContacts[];
+  totalCount: number;
 }
 
 export const KanbanColumnView = memo(function KanbanColumnView({
   column,
   apps,
+  totalCount,
 }: KanbanColumnProps) {
   // Attach droppable ref to the entire column wrapper so drag hover detects even when collapsed
   const { ref, isDropTarget } = useDroppable({
@@ -23,10 +29,40 @@ export const KanbanColumnView = memo(function KanbanColumnView({
     accept: "card",
   });
 
-  const { setApplicationFormOpen } = useApplicationStore();
+  const { setApplicationFormOpen, appendApplications } = useApplicationStore();
 
   // Collapse state for mobile only
   const [isOpen, setIsOpen] = useState(apps.length > 0);
+
+  // Pagination state
+  const [hasMore, setHasMore] = useState(apps.length >= 10);
+  const { ref: inViewRef, inView } = useInView({
+    threshold: 0,
+    rootMargin: "50px",
+  });
+
+  const { execute: loadMore, isExecuting } = useAction(loadMoreApplicationsAction, {
+    onSuccess: ({ data }) => {
+      if (data) {
+        appendApplications(data);
+        if (data.length < 10) {
+          setHasMore(false);
+        }
+      }
+    },
+    onError: (e) => {
+      toast.error(e.error.serverError || "Failed to load more applications");
+    },
+  });
+
+  useEffect(() => {
+    if (inView && hasMore && !isExecuting && apps.length > 0) {
+      const cursorId = apps[apps.length - 1]?.id;
+      if (cursorId) {
+        loadMore({ status: column.id, cursorId });
+      }
+    }
+  }, [inView, hasMore, isExecuting, apps, column.id, loadMore]);
 
   // Auto-expand on mobile when dragging a card over this column
   useEffect(() => {
@@ -61,7 +97,7 @@ export const KanbanColumnView = memo(function KanbanColumnView({
               fontFamily: "var(--font-body, inherit)",
             }}
           >
-            {apps.length}
+            {totalCount}
           </span>
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -108,6 +144,27 @@ export const KanbanColumnView = memo(function KanbanColumnView({
               >
                 Drop here
               </p>
+            </div>
+          )}
+
+          {/* Observer Element / Loading Indicator */}
+          {hasMore && apps.length > 0 && (
+            <div
+              ref={inViewRef}
+              className="flex items-center justify-center p-4 mt-2"
+              style={{
+                color: "rgba(255,255,255,0.4)",
+                fontFamily: "var(--font-body, inherit)",
+              }}
+            >
+              {isExecuting ? (
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="text-xs font-sketch tracking-wide">Drawing more...</span>
+                </div>
+              ) : (
+                <div className="h-5" />
+              )}
             </div>
           )}
 
