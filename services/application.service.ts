@@ -39,10 +39,59 @@ const AUTO_REMINDER_MAP: Partial<Record<ApplicationStatus, AutoReminderConfig>> 
   },
 };
 
-export async function getApplications(userId: string) {
-  return prisma.application.findMany({
+export async function getApplicationCounts(userId: string) {
+  const grouped = await prisma.application.groupBy({
+    by: ["status"],
     where: { userId },
-    orderBy: { updatedAt: "desc" },
+    _count: true,
+  });
+
+  const counts: Record<string, number> = {};
+  let total = 0;
+
+  grouped.forEach((group) => {
+    counts[group.status] = group._count;
+    total += group._count;
+  });
+
+  return { total, counts };
+}
+
+export async function getApplications(userId: string) {
+  const statuses: ApplicationStatus[] = [
+    "applied",
+    "screening",
+    "interview",
+    "offer",
+    "rejected",
+    "ghosted",
+  ];
+
+  const results = await Promise.all(
+    statuses.map((status) =>
+      prisma.application.findMany({
+        where: { userId, status },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: 10,
+        include: { contacts: true },
+      })
+    )
+  );
+
+  return results.flat();
+}
+
+export async function getMoreApplications(
+  userId: string,
+  status: ApplicationStatus,
+  cursorId: string
+) {
+  return prisma.application.findMany({
+    where: { userId, status },
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+    take: 10,
+    skip: 1, // skip the cursor record
+    cursor: { id: cursorId },
     include: { contacts: true },
   });
 }

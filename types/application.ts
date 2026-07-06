@@ -42,6 +42,11 @@ export const searchApplicationsSchema = z.object({
   query: z.string().trim().default(""),
 });
 
+export const loadMoreApplicationsSchema = z.object({
+  status: z.enum(["applied", "screening", "interview", "offer", "rejected", "ghosted"]),
+  cursorId: z.string(),
+});
+
 export type CreateApplicationInput = z.infer<typeof createApplicationSchema>;
 export type UpdateApplicationInput = z.infer<typeof updateApplicationSchema>;
 export type ChangeStatusInput = z.infer<typeof changeStatusSchema>;

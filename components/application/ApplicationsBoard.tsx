@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { getApplications } from "@/services/application.service";
+import { getApplications, getApplicationCounts } from "@/services/application.service";
 import { KanbanBoard } from "./KanbanBoard";
 
 export default async function ApplicationsBoard() {
@@ -14,7 +14,10 @@ export default async function ApplicationsBoard() {
     redirect("/login");
   }
 
-  const applications = await getApplications(user.id);
+  const [applications, applicationCounts] = await Promise.all([
+    getApplications(user.id),
+    getApplicationCounts(user.id),
+  ]);
 
-  return <KanbanBoard initialApplications={applications} />;
+  return <KanbanBoard initialApplications={applications} initialCounts={applicationCounts} />;
 }

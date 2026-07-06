@@ -15,7 +15,8 @@ import {
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { logoutAction, getUserProfileAction } from "@/actions/auth/auth.actions";
-import { ChalkNavDesktop } from "./ChalkNavDesktop";
+import { ChalkNavDesktopLinks } from "./ChalkNavDesktopLinks";
+import { ChalkNavDesktopUser } from "./ChalkNavDesktopUser";
 import { ChalkNavMobile } from "./ChalkNavMobile";
 
 const navItems = [
@@ -81,37 +82,43 @@ export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactN
       }}
     >
       {/* Top Header Row */}
-      <div className="flex items-center justify-between gap-2 py-2 px-4 lg:px-6 h-14">
+      <div className="flex items-center justify-between gap-2 py-2 px-4 lg:px-6 h-14 w-full">
         {/* Logo */}
         <Link href="/applications" className="flex items-center gap-2 shrink-0 mr-4">
           <BookOpen size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
           <span className="font-sketch chalk-text text-xl tracking-wide">NotHired</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <ChalkNavDesktop
-          pathname={pathname}
-          navItems={filteredNavItems}
-          userName={userName}
-          phase={phase}
-          logout={logout}
-          isLoggingOut={isLoggingOut}
-          notificationBell={notificationBell}
-        />
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center gap-2 flex-1">
+          <ChalkNavDesktopLinks pathname={pathname} navItems={filteredNavItems} />
+        </div>
 
-        {/* Mobile menu trigger */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden flex items-center justify-center p-2 rounded cursor-pointer transition-colors"
-          style={{
-            border: "1px dashed rgba(255,255,255,0.2)",
-            background: "rgba(255,255,255,0.05)",
-            color: "rgba(255,255,255,0.85)",
-          }}
-          aria-label="Toggle navigation menu"
-        >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+        {/* Right side container */}
+        <div className="flex items-center gap-3 shrink-0">
+          {notificationBell}
+
+          <ChalkNavDesktopUser
+            userName={userName}
+            phase={phase}
+            logout={logout}
+            isLoggingOut={isLoggingOut}
+          />
+
+          {/* Mobile menu trigger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden flex items-center justify-center p-2 rounded cursor-pointer transition-colors"
+            style={{
+              border: "1px dashed rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.05)",
+              color: "rgba(255,255,255,0.85)",
+            }}
+            aria-label="Toggle navigation menu"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer (underneath) */}
@@ -123,7 +130,6 @@ export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactN
         logout={logout}
         isLoggingOut={isLoggingOut}
         isOpen={isOpen}
-        notificationBell={notificationBell}
       />
     </nav>
   );
