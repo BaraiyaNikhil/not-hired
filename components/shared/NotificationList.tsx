@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import { formatDistanceToNow } from "@/utils/date";
 
-import { getNotificationsAction } from "@/actions/notification/notification.actions";
+import { getNotificationsAction } from "@/actions/notification.actions";
 import { NotificationType } from "@prisma/client";
 
 interface Notification {

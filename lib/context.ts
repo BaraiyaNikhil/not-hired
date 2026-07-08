@@ -56,7 +56,6 @@ export const buildUserContext = async (userId: string): Promise<UserContext> => 
 
   const oldest = pending[0];
 
-  // Weekly rate — last 4 weeks
   const fourWeeksAgo = new Date();
   fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
   const recentApps = apps.filter((a) => new Date(a.appliedDate || a.createdAt) > fourWeeksAgo);
@@ -66,8 +65,8 @@ export const buildUserContext = async (userId: string): Promise<UserContext> => 
     responseRate: total > 0 ? Math.round((responded / total) * 100) : 0,
     sourceBreakdown,
     stageBreakdown,
-    avgDaysToFirstResponse: 0, // compute from status change logs later if needed
-    followUpRate: 0, // compute from reminders completed if needed
+    avgDaysToFirstResponse: 0,
+    followUpRate: 0,
     referralResponseRate:
       referralApps.length > 0 ? Math.round((referralResponded / referralApps.length) * 100) : null,
     weeklyApplicationRate: Math.round(recentApps.length / 4),
@@ -77,6 +76,6 @@ export const buildUserContext = async (userId: string): Promise<UserContext> => 
           daysAgo: differenceInDays(new Date(), new Date(oldest.appliedDate || oldest.createdAt)),
         }
       : null,
-    upcomingInterviews: null, // to be populated
+    upcomingInterviews: null,
   };
 };

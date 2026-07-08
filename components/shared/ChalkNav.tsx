@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, LayoutGrid, Bell, Lightbulb, Menu, X, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
-import { logoutAction } from "@/actions/auth/auth.actions";
+import { logoutAction } from "@/actions/auth.actions";
 import { ChalkNavDesktopLinks } from "./ChalkNavDesktopLinks";
 import { ChalkNavDesktopUser } from "./ChalkNavDesktopUser";
 import { ChalkNavMobile } from "./ChalkNavMobile";

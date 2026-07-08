@@ -3,7 +3,7 @@
 import { memo, useEffect } from "react";
 import { InsightCard } from "./InsightCard";
 import { useInsightStore } from "@/store/insight.store";
-import { fetchInsightsAction, refreshInsightsAction } from "@/actions/ai/nudges.action";
+import { fetchInsightsAction, refreshInsightsAction } from "@/actions/ai-insight.action";
 import { AiInsightsSkeleton } from "@/components/skeleton/AiInsightsSkeleton";
 import { RefreshCw } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";

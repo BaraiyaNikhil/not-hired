@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { CheckCircle2, Loader2, Bell, Zap } from "lucide-react";
 import { ReminderWithApplication } from "@/types/reminder";
-import { markReminderDoneAction } from "@/actions/reminder/reminder.actions";
+import { markReminderDoneAction } from "@/actions/reminder.actions";
 import { toast } from "sonner";
 import { ReminderTrigger } from "@prisma/client";
 import { formatDistanceToNow, format, isToday, isPast } from "@/utils/date";

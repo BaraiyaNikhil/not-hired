@@ -19,7 +19,7 @@ export async function getOrGenerateNudges(
     where: { userId },
   });
 
-  if (applicationCount < 1) {
+  if (applicationCount < 10) {
     return {
       insights: [],
       isLocked: true,
@@ -145,7 +145,6 @@ export async function getOrGenerateNudges(
     };
   } catch (error) {
     console.error("Failed to generate insights:", error);
-    // Fallback to cache if generation fails, otherwise empty array
     if (cache) {
       return {
         insights: cache.insights as unknown as AiInsight[],

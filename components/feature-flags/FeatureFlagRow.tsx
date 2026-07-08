@@ -4,10 +4,7 @@ import { useState, useTransition } from "react";
 import { FeatureFlag } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
 import { Trash2 } from "lucide-react";
-import {
-  toggleFeatureFlagAction,
-  deleteFeatureFlagAction,
-} from "@/actions/feature-flag/feature_flag.action";
+import { toggleFeatureFlagAction, deleteFeatureFlagAction } from "@/actions/feature_flag.action";
 import { toast } from "sonner";
 
 interface FeatureFlagRowProps {
