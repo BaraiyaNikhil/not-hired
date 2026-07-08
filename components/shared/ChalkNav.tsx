@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, LayoutGrid, Bell, Lightbulb, Menu, X, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
-import { logoutAction, getUserProfileAction } from "@/actions/auth/auth.actions";
+import { logoutAction } from "@/actions/auth/auth.actions";
 import { ChalkNavDesktopLinks } from "./ChalkNavDesktopLinks";
 import { ChalkNavDesktopUser } from "./ChalkNavDesktopUser";
 import { ChalkNavMobile } from "./ChalkNavMobile";
@@ -21,26 +21,22 @@ const navItems = [
 
 type WelcomePhase = "welcome" | "user";
 
-export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactNode }) {
+export function ChalkNav({
+  notificationBell,
+  initialUserName = null,
+  initialIsAdmin = false,
+}: {
+  notificationBell?: React.ReactNode;
+  initialUserName?: string | null;
+  initialIsAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setUserName] = useState<string | null>(initialUserName);
+  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
   const [phase, setPhase] = useState<WelcomePhase>("welcome");
   const [isOpen, setIsOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
-
-  const { execute: fetchProfile } = useAction(getUserProfileAction, {
-    onSuccess: ({ data }) => {
-      if (data?.name) setUserName(data.name);
-      if (data?.isAdmin) setIsAdmin(data.isAdmin);
-    },
-  });
-
-  useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (!userName) return;
