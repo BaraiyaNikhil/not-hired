@@ -14,14 +14,7 @@ export function LandingNav() {
     >
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2.5 no-underline">
-        <Image
-          src="/Logo.png"
-          alt="NotHired Logo"
-          width={40}
-          height={40}
-          quality={1}
-          className="rounded"
-        />
+        <Image src="/Logo.png" alt="NotHired Logo" width={40} height={40} className="rounded" />
         <span className="font-sketch text-[22px] text-white/90">NotHired</span>
       </Link>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { signupAction, loginWithGoogleAction } from "@/actions/auth/auth.actions";
+import { signupAction, loginWithGoogleAction } from "@/actions/auth.actions";
 import { useAction } from "next-safe-action/hooks";
 import { motion, Transition } from "motion/react";
 import Image from "next/image";

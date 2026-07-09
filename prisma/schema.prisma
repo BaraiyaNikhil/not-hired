@@ -33,6 +33,7 @@ model User {
   applications  Application[]
   reminders     Reminder[]
   notifications Notification[]
+  insightCache  UserInsightCache?
 
   @@map("users")
 }
@@ -150,4 +151,19 @@ enum NotificationType {
   SYSTEM
   REMINDER_DIGEST
   AI_ACTION
+}
+
+model UserInsightCache {
+  id                  String   @id @default(cuid())
+  userId              String   @unique @map("user_id")
+  insights            Json
+  baseActivityCount   Int      @map("base_activity_count")
+  refreshesToday      Int      @default(0) @map("refreshes_today")
+  generatedAt         DateTime @default(now()) @map("generated_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_insight_caches")
 }

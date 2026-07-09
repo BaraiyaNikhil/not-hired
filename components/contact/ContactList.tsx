@@ -4,7 +4,7 @@ import { Application } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Phone, Mail } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { deleteContactAction } from "@/actions/contact/contact.actions";
+import { deleteContactAction } from "@/actions/contact.actions";
 import { toast } from "sonner";
 import { ContactForm } from "./ContactForm";
 import { useContactStore } from "@/store";

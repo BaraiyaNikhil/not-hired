@@ -8,7 +8,7 @@ import { useApplicationStore } from "@/store";
 import { useState, useEffect, memo } from "react";
 import { useInView } from "react-intersection-observer";
 import { useAction } from "next-safe-action/hooks";
-import { loadMoreApplicationsAction } from "@/actions/application/application.actions";
+import { loadMoreApplicationsAction } from "@/actions/application.actions";
 import { toast } from "sonner";
 
 interface KanbanColumnProps {

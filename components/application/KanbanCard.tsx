@@ -4,7 +4,7 @@ import { memo } from "react";
 import { motion } from "motion/react";
 import { Edit, Trash2, Users, GripVertical, ExternalLink, MoreVertical } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { deleteApplicationAction } from "@/actions/application/application.actions";
+import { deleteApplicationAction } from "@/actions/application.actions";
 import { toast } from "sonner";
 import { useApplicationStore } from "@/store";
 import { AppWithContacts } from "@/types/kanban";

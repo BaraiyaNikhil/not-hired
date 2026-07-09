@@ -21,7 +21,7 @@ import { useAction } from "next-safe-action/hooks";
 import {
   deleteApplicationAction,
   changeApplicationStatusAction,
-} from "@/actions/application/application.actions";
+} from "@/actions/application.actions";
 import { toast } from "sonner";
 import { useApplicationStore } from "@/store";
 import {
