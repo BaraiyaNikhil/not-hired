@@ -158,7 +158,7 @@
 
   .chalk-input::placeholder {
     color: rgba(255, 255, 255, 0.5);
-    font-family: var(--font-sketch, "Cabin Sketch"), cursive;
+    font-family: var(--font-body, "Sniglet"), cursive;
   }
 
   .chalk-button {

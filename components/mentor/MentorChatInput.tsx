@@ -51,13 +51,13 @@ export const MentorChatInput = memo(function MentorChatInput({
       <Button
         id="mentor-send-btn"
         variant="ghost"
-        size="icon-sm"
+        size="icon"
         onClick={handleSend}
         disabled={disabled || !value.trim()}
         aria-label="Send message"
-        className="chalk-action-btn shrink-0"
+        className="shrink-0"
       >
-        <Send size={15} />
+        <Send className="size-5" />
       </Button>
     </div>
   );
