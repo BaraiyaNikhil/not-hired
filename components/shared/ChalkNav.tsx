@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, LayoutGrid, Bell, Lightbulb, Menu, X, Flag } from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Bell, Menu, X, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { logoutAction } from "@/actions/auth.actions";
@@ -15,7 +15,6 @@ const navItems = [
   { href: "/applications", label: "Board", icon: LayoutGrid },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/reminders", label: "Reminders", icon: Bell },
-  { href: "/insights", label: "Insights", icon: Lightbulb },
   { href: "/feature-flags", label: "Feature flags", icon: Flag },
 ];
 
@@ -32,8 +31,8 @@ export function ChalkNav({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(initialUserName);
-  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
+  const userName = initialUserName ?? null;
+  const isAdmin = initialIsAdmin ?? false;
   const [phase, setPhase] = useState<WelcomePhase>("welcome");
   const [isOpen, setIsOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
