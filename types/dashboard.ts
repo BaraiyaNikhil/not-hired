@@ -53,6 +53,13 @@ export interface UpcomingReminderItem {
   dueDate: Date;
 }
 
+export interface AiInsight {
+  id: string;
+  type: "critical" | "warning" | "info";
+  text: string;
+  action: string;
+}
+
 export interface DashboardData {
   headerStats: DashboardHeaderStats;
   pipelineFunnel: PipelineFunnelStats;
