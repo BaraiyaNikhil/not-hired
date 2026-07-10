@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 import { PipelinePreview } from "./PipelinePreview";
 import { RemindersPreview } from "./RemindersPreview";
-import { AI_INSIGHTS } from "@/data/landing/features.data";
-import { InsightCard } from "./InsightCard";
+import { LANDING_AI_INSIGHTS } from "@/data/landing/ai-insights.data";
+import { LandingInsightCard } from "./InsightCard";
 
 export function FeaturesSection() {
   return (
@@ -22,7 +22,7 @@ export function FeaturesSection() {
             className="block text-[10px] tracking-[0.22em] uppercase text-white/50 mb-3"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Core features
+            What&apos;s inside
           </span>
           <h2
             className="font-sketch font-bold text-white/90"
@@ -42,20 +42,20 @@ export function FeaturesSection() {
 
         {/* Feature 2 — AI Insights */}
         <FeatureRow
-          label="[ Brutal Honesty Mode ]"
+          label="[ AI Mentor · Live ]"
           title="Your AI coach that won't baby you"
-          body="Not encouragement. Not a pep talk. Specific, actionable insights about what's blocking you — derived from your real data, not guesses."
+          body="Powered by real data from your pipeline. Ask your AI mentor why you're getting ghosted, what source is killing your response rate, or how to fix your follow-up gap — all from inside your dashboard."
           reverse
           visual={
-            <div>
+            <div className="flex flex-col gap-2.5">
               <div
-                className="text-[10px] tracking-[0.18em] uppercase text-white/50 mb-[14px]"
+                className="text-[10px] tracking-[0.18em] uppercase text-white/50 mb-[10px]"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                AI analysis
+                Live · AI mentor
               </div>
-              {AI_INSIGHTS.map((ins) => (
-                <InsightCard key={ins.sev} {...ins} />
+              {LANDING_AI_INSIGHTS.slice(0, 2).map((ins) => (
+                <LandingInsightCard key={ins.id} insight={ins} />
               ))}
             </div>
           }

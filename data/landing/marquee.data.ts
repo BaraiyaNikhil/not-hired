@@ -1,8 +1,8 @@
 export const MARQUEE_ITEMS: string[] = [
-  "847 applications tracked this week",
-  "23% avg response rate improvement",
-  '"Finally know what\'s actually wrong"',
-  "Built by a job seeker, for job seekers",
-  "Kanban · AI Insights · Reminders",
-  "No spreadsheet required",
+  "Kanban board · 6 stages · drag & drop",
+  "AI mentor with your journey",
+  "Follow-up reminders that actually fire",
+  "Real insights from your real data",
+  "Chat your way to a better job search",
+  "No spreadsheet required · free to start",
 ];
