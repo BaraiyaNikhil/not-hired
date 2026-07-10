@@ -34,9 +34,8 @@ export function MentorPanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
           transition={{ type: "spring", damping: 28, stiffness: 280 }}
-          className="fixed right-0 top-0 h-svh z-50 flex flex-col bg-background border-11 border-board-border"
+          className="fixed right-0 top-0 w-[100dvw] md:w-[385px] h-svh z-50 flex flex-col bg-background border-11 border-board-border"
           style={{
-            width: "384px",
             borderRight: "1px dashed rgba(255,255,255,0.2)",
           }}
           aria-label="AI Mentor Panel"
