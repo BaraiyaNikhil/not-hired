@@ -19,7 +19,7 @@ export function LandingFooter() {
         {[
           { label: "How it works", href: "#how" },
           { label: "Features", href: "#features" },
-          { label: "Insights", href: "#honesty" },
+          { label: "Dashboard", href: "/dashboard" },
           { label: "Sign in", href: "/applications" },
         ].map((l) => (
           <li key={l.href}>
