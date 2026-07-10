@@ -59,6 +59,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("h-full", "antialiased")} suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="1sc0zFzAh7Ed0Xo2JdBTDaY8fVAoQckHL36UNe7kH7Q" />
+      </head>
       <body
         className={cn("min-h-full flex flex-col font-sans", sniglet.variable, cabinSketch.variable)}
       >
