@@ -5,7 +5,7 @@ import { FeatureFlag } from "@prisma/client";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFeatureFlagSchema, CreateFeatureFlagInput } from "@/types/feature_flag";
-import { createFeatureFlagAction } from "@/actions/feature-flag/feature_flag.action";
+import { createFeatureFlagAction } from "@/actions/feature_flag.action";
 import {
   Dialog,
   DialogContent,

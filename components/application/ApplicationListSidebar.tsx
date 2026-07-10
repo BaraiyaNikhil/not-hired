@@ -4,7 +4,7 @@ import { useState, useTransition, useEffect, useCallback } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
-import { searchApplicationsAction } from "@/actions/application/application.actions";
+import { searchApplicationsAction } from "@/actions/application.actions";
 import { ApplicationSummary } from "@/types/application";
 import { ApplicationRow } from "./ApplicationRow";
 import { ApplicationListSidebarSkeleton } from "@/components/skeleton/application/ApplicationListSidebarSkeleton";

@@ -12,7 +12,7 @@ import {
 import {
   getUnreadNotificationCountAction,
   markAllNotificationsAsReadAction,
-} from "@/actions/notification/notification.actions";
+} from "@/actions/notification.actions";
 import { NotificationList } from "./NotificationList";
 
 export function NotificationBell() {

@@ -69,3 +69,19 @@ export interface DashboardData {
   recentActivity: RecentActivityItem[];
   upcomingReminders: UpcomingReminderItem[];
 }
+
+export type AiInsightType = "info" | "warning" | "critical";
+
+export interface AiInsight {
+  id: string;
+  type: AiInsightType;
+  text: string;
+  action: string;
+}
+
+export interface InsightResponse {
+  insights: AiInsight[];
+  isLocked: boolean;
+  generatedAt: string | null;
+  refreshesToday: number;
+}

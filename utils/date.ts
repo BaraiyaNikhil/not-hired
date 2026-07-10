@@ -120,3 +120,11 @@ export function format(date: Date, pattern: string): string {
     .replace("mm", mm)
     .replace("a", ampm);
 }
+
+/**
+ * Returns the number of full days between the given dates (dateLeft - dateRight).
+ */
+export function differenceInDays(dateLeft: Date, dateRight: Date): number {
+  const diff = new Date(dateLeft).getTime() - new Date(dateRight).getTime();
+  return Math.round(diff / 86_400_000);
+}

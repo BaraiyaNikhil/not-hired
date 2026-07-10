@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { useApplicationStore } from "@/store";
-import { changeApplicationStatusAction } from "@/actions/application/application.actions";
+import { changeApplicationStatusAction } from "@/actions/application.actions";
 import { KanbanColumnView } from "./KanbanColumn";
 import { AppWithContacts, KANBAN_COLUMNS } from "@/types/kanban";
 import { Application } from "@prisma/client";

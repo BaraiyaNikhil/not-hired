@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
-import { createContactAction, updateContactAction } from "@/actions/contact/contact.actions";
+import { createContactAction, updateContactAction } from "@/actions/contact.actions";
 import { createContactSchema } from "@/types/contact";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -12,7 +12,7 @@ import {
   getTodayRemindersAction,
   getUpcomingRemindersAction,
   getCompletedRemindersAction,
-} from "@/actions/reminder/reminder.actions";
+} from "@/actions/reminder.actions";
 
 interface ReminderListProps {
   section: "today" | "upcoming" | "completed";

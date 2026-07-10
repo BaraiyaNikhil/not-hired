@@ -19,7 +19,7 @@
 - **Auth:** Clerk or NextAuth - Don't waste time building auth
 - **Database:** PostgreSQL + Prisma - Shows real DB thinking
 - **Hosting:** Vercel + Supabase - Free, fast, impressive
-- **AI:** Claude API - Ironic and smart choice
+- **AI:** AI SDK by vercel + OpenRouter
 - **Drag & Drop:** `@dnd-kit` - Modern, accessible
 - **Charts:** Recharts - Simple, works with React
 
@@ -33,8 +33,8 @@
 6. **Animation:** use framer-motion for animations.
 7. **Theme:** use tailwind css for theming and always give both dark and light mode support to the app by default.
 8. **Form & Validation:** Always use react-hook-form and zod for form handling and validation.
-9. **Actions:** use next-safe-action for server actions and create actions in "actions" folder with there own folder name.
-10. **Services:** create services to use in action and it must be async functions and create all services in "services" folder with there own folder name.
+9. **Actions:** use next-safe-action for server actions and create actions in "actions" folder.
+10. **Services:** create services to use in action and it must be async functions and create all services in "services" folder..
 11. **Hooks:** create custom hooks in "hooks" folder.
 12. **Types:** create types for each action and its return type.
 13. **Component Granularity:** keep components small and focused — one responsibility per component. Aggressively extract sub-components (e.g. a card, a row, a badge) into their own files inside the same feature folder. A component file should rarely exceed ~150 lines. NEVER define a component inside another component or page file; ALWAYS make it a separate component in its own file and import it. Even skeleton components must be separated and placed in the skeleton folder and prefer component reusability.

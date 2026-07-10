@@ -1,20 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  BookOpen,
-  LayoutDashboard,
-  LayoutGrid,
-  Bell,
-  Lightbulb,
-  Menu,
-  X,
-  Flag,
-} from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Bell, Menu, X, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
-import { logoutAction, getUserProfileAction } from "@/actions/auth/auth.actions";
+import { logoutAction } from "@/actions/auth.actions";
 import { ChalkNavDesktopLinks } from "./ChalkNavDesktopLinks";
 import { ChalkNavDesktopUser } from "./ChalkNavDesktopUser";
 import { ChalkNavMobile } from "./ChalkNavMobile";
@@ -23,32 +15,27 @@ const navItems = [
   { href: "/applications", label: "Board", icon: LayoutGrid },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/reminders", label: "Reminders", icon: Bell },
-  { href: "/insights", label: "Insights", icon: Lightbulb },
   { href: "/feature-flags", label: "Feature flags", icon: Flag },
 ];
 
 type WelcomePhase = "welcome" | "user";
 
-export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactNode }) {
+export function ChalkNav({
+  notificationBell,
+  initialUserName = null,
+  initialIsAdmin = false,
+}: {
+  notificationBell?: React.ReactNode;
+  initialUserName?: string | null;
+  initialIsAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const userName = initialUserName ?? null;
+  const isAdmin = initialIsAdmin ?? false;
   const [phase, setPhase] = useState<WelcomePhase>("welcome");
   const [isOpen, setIsOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
-
-  const { execute: fetchProfile } = useAction(getUserProfileAction, {
-    onSuccess: ({ data }) => {
-      if (data?.name) setUserName(data.name);
-      if (data?.isAdmin) setIsAdmin(data.isAdmin);
-    },
-  });
-
-  useEffect(() => {
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (!userName) return;
@@ -85,7 +72,7 @@ export function ChalkNav({ notificationBell }: { notificationBell?: React.ReactN
       <div className="flex items-center justify-between gap-2 py-2 px-4 lg:px-6 h-14 w-full">
         {/* Logo */}
         <Link href="/applications" className="flex items-center gap-2 shrink-0 mr-4">
-          <BookOpen size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
+          <Image src="/Logo.png" alt="NotHired Logo" width={40} height={40} className="rounded" />
           <span className="font-sketch chalk-text text-xl tracking-wide">NotHired</span>
         </Link>
 
