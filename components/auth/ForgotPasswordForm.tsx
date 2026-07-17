@@ -21,8 +21,9 @@ export function ForgotPasswordForm() {
   const { executeAsync, isExecuting } = useAction(forgotPasswordAction, {
     onSuccess: ({ data }) => {
       if (data?.success) {
-        setSuccessMessage("Check your email for the password reset link.");
-        toast.success("Password reset email sent.");
+        setSuccessMessage(
+          "If account is associated with us, you will get email with the password reset link."
+        );
       }
     },
     onError: ({ error }) => {
@@ -55,9 +56,12 @@ export function ForgotPasswordForm() {
       className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center p-8 z-10"
     >
       <div className="w-full max-w-md mx-auto flex flex-col justify-center h-full">
-        <h2 className="font-sketch text-2xl sm:text-4xl md:text-5xl font-bold chalk-text text-center mb-4">
+        <h2 className="font-sketch text-2xl sm:text-4xl md:text-5xl font-semibold chalk-text text-center mb-4">
           Forgot Password
         </h2>
+        <p className="text-sm text-amber-300/50 text-center mb-4">
+          *Please check Spam if email not found!
+        </p>
         <p className="font-sketch text-xl md:text-2xl chalk-text text-center mb-4 text-white/70">
           We&apos;ll send you a link to get back into your account.
         </p>
