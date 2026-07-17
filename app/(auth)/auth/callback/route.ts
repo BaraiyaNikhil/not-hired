@@ -5,8 +5,8 @@ import { prisma } from "@/lib/db";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  // if "next" is in param, use it as the redirect URL
   const next = searchParams.get("next") ?? "/applications";
+  const isRecovery = next === "/reset-password";
 
   if (code) {
     const supabase = await createClient();
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 
     if (!error) {
       const user = data?.user;
-      if (user && user.email) {
+      if (user && user.email && !isRecovery) {
         try {
           await prisma.user.upsert({
             where: { id: user.id },
@@ -45,6 +45,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  return NextResponse.redirect(`${origin}/login?error=Invalid+or+expired+recovery+link`);
 }

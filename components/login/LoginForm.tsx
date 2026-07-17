@@ -4,6 +4,7 @@ import { loginAction, loginWithGoogleAction } from "@/actions/auth.actions";
 import { useAction } from "next-safe-action/hooks";
 import { motion, Transition } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import Google from "@/assets/img/google-logo.svg";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -124,12 +125,12 @@ export function LoginForm({
               >
                 Password
               </label>
-              <a
+              <Link
                 className="font-sketch text-sm sm:text-xl text-white/50 hover:text-white transition-colors"
-                href="#"
+                href="/forgot-password"
               >
                 Forgot?
-              </a>
+              </Link>
             </div>
             <input
               {...register("password")}

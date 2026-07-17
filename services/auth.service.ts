@@ -3,7 +3,12 @@ import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
-import { SignupFormValues, LoginFormValues } from "@/types/auth";
+import {
+  SignupFormValues,
+  LoginFormValues,
+  ForgotPasswordFormValues,
+  ResetPasswordFormValues,
+} from "@/types/auth";
 
 export async function signupService(data: SignupFormValues) {
   const supabase = await createClient();
@@ -11,9 +16,6 @@ export async function signupService(data: SignupFormValues) {
   const headersList = await headers();
   const origin =
     headersList.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-  // We can't really check if name is unique unless name is @unique in prisma
-  // Let's remove the username check, or just check email if needed, but Supabase handles email.
 
   const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
@@ -101,6 +103,38 @@ export async function getUserProfileService(userId: string) {
 export async function logoutService() {
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function forgotPasswordService(data: ForgotPasswordFormValues) {
+  const supabase = await createClient();
+
+  const headersList = await headers();
+  const origin =
+    headersList.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`,
+  });
+
+  if (error) {
+    console.error("Failed to send password reset email:", error);
+  }
+
+  return { success: true };
+}
+
+export async function resetPasswordService(data: ResetPasswordFormValues) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password: data.password,
+  });
 
   if (error) {
     return { error: error.message };

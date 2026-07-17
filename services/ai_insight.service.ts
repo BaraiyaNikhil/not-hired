@@ -6,6 +6,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { buildUserContext } from "@/lib/context";
 import { InsightResponse, AiInsight } from "@/types/dashboard";
+import { toast } from "sonner";
 
 const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -145,6 +146,7 @@ export async function getOrGenerateNudges(
     };
   } catch (error) {
     console.error("Failed to generate insights:", error);
+    toast.error("Failed to generate insights");
     if (cache) {
       return {
         insights: cache.insights as unknown as AiInsight[],

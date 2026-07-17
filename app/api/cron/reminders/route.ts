@@ -8,7 +8,7 @@ import { createElement } from "react";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://not-hired.vercel.app";
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "reminders@nothired.dpdns.org";
+const FROM_EMAIL = `reminders${process.env.RESEND_FROM_EMAIL ?? "@nothired.dpdns.org"}`;
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");

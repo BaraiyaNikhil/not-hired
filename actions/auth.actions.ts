@@ -1,12 +1,14 @@
 "use server";
 
 import { actionClient, authActionClient } from "@/lib/safe-action";
-import { signupSchema, loginSchema } from "@/types/auth";
+import { signupSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from "@/types/auth";
 import {
   signupService,
   loginService,
   loginWithGoogleService,
   logoutService,
+  forgotPasswordService,
+  resetPasswordService,
 } from "@/services/auth.service";
 
 export const signupAction = actionClient
@@ -41,3 +43,20 @@ export const logoutAction = authActionClient.action(async () => {
     throw new Error(result.error);
   }
 });
+
+export const forgotPasswordAction = actionClient
+  .inputSchema(forgotPasswordSchema)
+  .action(async ({ parsedInput }) => {
+    const result = await forgotPasswordService(parsedInput);
+    return { success: result.success };
+  });
+
+export const resetPasswordAction = authActionClient
+  .inputSchema(resetPasswordSchema)
+  .action(async ({ parsedInput }) => {
+    const result = await resetPasswordService(parsedInput);
+    if (result.error) {
+      throw new Error(result.error);
+    }
+    return { success: result.success };
+  });
